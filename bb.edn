@@ -1,0 +1,5 @@
+{:tasks
+ {:enter (println "Running task:" (:name (current-task)))
+
+  deps {:doc "Install all deps"
+        :task (clojure "-P")}}}

@@ -1,0 +1,3 @@
+{:deps {org.clojure/clojure {:mvn/version "1.12.0"}
+        io.github.clojure/tools.build {:git/tag "v0.10.6" :git/sha "52cf7d6"}}
+ :paths ["src"]}
