@@ -12,7 +12,7 @@ The slim way to build Clojure.
 - 📦 **Zero Dependencies**: Built on top of official `tools.build`
 - 🔧 **Sensible Defaults**: Works out of the box for most Clojure projects
 
-## Quick Start: build app
+## Quick Start: Build app
 
 Add slim to your `deps.edn`:
 
@@ -32,14 +32,15 @@ clojure -T:slim build
 That's it! Your uberjar will be created at target/standalone.jar .
 
 ## Usage
-### Basic Build App
+
+### Build app
 The minimal configuration requires only the main namespace:
 
 ```clojure
 {:exec-args {:main-ns my-app.core}}
  ```
 
-### Custom Configuration
+#### Custom configuration
 You can customize the build also with optional parameters. All available options are shown below:
 
 ```clojure
@@ -49,11 +50,14 @@ You can customize the build also with optional parameters. All available options
              :src-dirs ["src" "resources" "custom-src"]}
 ```
 
-### Configuration Options
 - :main-ns (required) - Main namespace to compile
 - :target-dir (optional) - Target directory for build artifacts (default: "target")
 - :uber-file (optional) - Name of the output uberjar (default: "target/standalone.jar")
 - :src-dirs (optional) - Source directories to include (default: ["src" "resources"])
+
+### Build library
+
+*TODO: Add instructions*
 
 ## Alternatives
 
