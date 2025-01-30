@@ -47,13 +47,15 @@ You can customize the build also with optional parameters. All available options
 {:exec-args {:main-ns my-app.core
              :target-dir "custom-target"
              :uber-file "my-app.jar"
-             :src-dirs ["src" "resources" "custom-src"]}
+             :src-dirs ["src" "resources" "custom-src"]
+             :class-dir "custom-classes")}
 ```
 
 - :main-ns (required) - Main namespace to compile
 - :target-dir (optional) - Target directory for build artifacts (default: "target")
 - :uber-file (optional) - Name of the output uberjar (default: "target/standalone.jar")
 - :src-dirs (optional) - Source directories to include (default: ["src" "resources"])
+- :class-dir - class directory (optional, default: target/classes)
 
 ### Build library
 
