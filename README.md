@@ -12,7 +12,7 @@ The slim way to build Clojure.
 - 📦 **Zero Dependencies**: Built on top of official `tools.build`
 - 🔧 **Sensible Defaults**: Works out of the box for most Clojure projects
 
-## Quick Start: Build app
+## Quick Start: Build App
 
 Add slim to your `deps.edn`:
 
@@ -29,35 +29,38 @@ Run the build:
 clojure -T:slim build
 ```
 
-That's it! Your uberjar will be created at target/standalone.jar .
+That's it! Your uberjar will be created at `target/standalone.jar`.
 
 ## Usage
 
-### Build app
+### Build: App
+Builds uberjar file for an application.
 The minimal configuration requires only the main namespace:
 
 ```clojure
-{:exec-args {:main-ns my-app.core}}
+{...
+ :exec-args {:main-ns my-app.core}}
  ```
 
 #### Custom configuration
 You can customize the build also with optional parameters. All available options are shown below:
 
 ```clojure
-{:exec-args {:main-ns my-app.core
+{...
+ :exec-args {:main-ns my-app.core
              :target-dir "custom-target"
              :uber-file "my-app.jar"
              :src-dirs ["src" "resources" "custom-src"]
-             :class-dir "custom-classes")}
+             :class-dir "custom-classes"}}
 ```
 
-- :main-ns (required) - Main namespace to compile
+- :main-ns (**required**) - Main namespace to compile
 - :target-dir (optional) - Target directory for build artifacts (default: "target")
 - :uber-file (optional) - Name of the output uberjar (default: "target/standalone.jar")
 - :src-dirs (optional) - Source directories to include (default: ["src" "resources"])
-- :class-dir - class directory (optional, default: target/classes)
+- :class-dir (optional) - class directory (default: "target/classes")
 
-### Build library
+### Build: Library
 
 *TODO: Add instructions*
 
