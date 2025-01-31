@@ -39,6 +39,7 @@ The minimal configuration requires only the main namespace:
 
 ```clojure
 {...
+ :ns-default slim.build-app
  :exec-args {:main-ns my-app.core}}
  ```
 
@@ -47,6 +48,7 @@ You can customize the build also with optional parameters. All available options
 
 ```clojure
 {...
+ :ns-default slim.build-app
  :exec-args {:main-ns my-app.core
              :target-dir "custom-target"
              :uber-file "my-app.jar"
@@ -54,11 +56,11 @@ You can customize the build also with optional parameters. All available options
              :class-dir "custom-classes"}}
 ```
 
-- :main-ns (**required**) - Main namespace to compile
-- :target-dir (optional) - Target directory for build artifacts (default: "target")
-- :uber-file (optional) - Name of the output uberjar (default: "target/standalone.jar")
-- :src-dirs (optional) - Source directories to include (default: ["src" "resources"])
-- :class-dir (optional) - class directory (default: "target/classes")
+- `:main-ns` (**required**) - Main namespace to compile
+- `:target-dir` (optional) - Target directory for build artifacts (default: "target")
+- `:uber-file` (optional) - Name of the output uberjar (default: "target/standalone.jar")
+- `:src-dirs` (optional) - Source directories to include (default: ["src" "resources"])
+- `:class-dir` (optional) - class directory (default: "target/classes")
 
 ### Build: Library
 
