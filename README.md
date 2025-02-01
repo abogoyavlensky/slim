@@ -66,6 +66,11 @@ You can customize the build also with optional parameters. All available options
 
 *TODO: Add instructions*
 
+## Inspired by
+
+- [application build](https://clojure.org/guides/tools_build#_compiled_uberjar_application_build) - from official tools.build guide
+- [build.tmpl](https://github.com/seancorfield/deps-new/blob/develop/resources/org/corfield/new/lib/build/build.tmpl) - from build-new lib template
+
 ## Alternatives
 
 - https://github.com/liquidz/build.edn
