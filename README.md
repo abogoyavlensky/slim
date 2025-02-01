@@ -19,7 +19,7 @@ Add slim to your `deps.edn`:
 ```clojure
 {:aliases
  {:slim {:deps {io.github.abogoyavlensky/slim {:git/tag "v0.1.0" :git/sha "..."}}
-         :ns-default slim.build-app
+         :ns-default slim.app
          :exec-args {:main-ns my-app.core}}}}
 ```
 
@@ -39,7 +39,7 @@ The minimal configuration requires only the main namespace:
 
 ```clojure
 {...
- :ns-default slim.build-app
+ :ns-default slim.app
  :exec-args {:main-ns my-app.core}}
  ```
 
@@ -48,7 +48,7 @@ You can customize the build also with optional parameters. All available options
 
 ```clojure
 {...
- :ns-default slim.build-app
+ :ns-default slim.app
  :exec-args {:main-ns my-app.core
              :target-dir "custom-target"
              :uber-file "my-app.jar"

@@ -1,4 +1,4 @@
-(ns slim.build-app
+(ns slim.app
     (:require [clojure.tools.build.api :as b]))
 
 (def ^:private TARGET-DIR "target")
