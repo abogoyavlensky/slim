@@ -4,7 +4,7 @@ The slim way to build Clojure.
 
 ## Overview
 
-`slim` is an intentionally minimal build tool for Clojure projects that emphasizes simplicity and minimal configuration. It helps you build uberjars with zero ceremony and minimal setup. It's quite opinionated and does not aim to be a general-purpose build tool. 
+`slim` is a minimal build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for Clojure application, or build and deploy jar for a Clojure library with zero ceremony. It's quite opinionated and does not aim to be a general-purpose build tool. 
 
 ## Features
 
