@@ -16,7 +16,8 @@
 (defn- get-version
   [latest-version snapshot?]
   (let [new-version (if (true? snapshot?)
-                      (str latest-version SNAPSHOT-SUFFIX))]
+                      (str latest-version SNAPSHOT-SUFFIX)
+                      latest-version)]
     (println (format "New version: %s" new-version))
     new-version))
 
