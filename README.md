@@ -161,7 +161,7 @@ or tag you can pass `:scm` option with value:
  :tag "v0.1.0}}}}}
 ```
 
-*Note: for other options please consult [spec](https://github.com/abogoyavlensky/slim/blob/da4f254ebdfc2c1b6987579cdd2f5ce3463a1950/src/slim/lib.clj#L28-L41) of the lib and definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
+*Note: for other options please consult [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the lib and definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
 
 ## Inspired by
 
