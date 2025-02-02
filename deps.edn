@@ -1,7 +1,15 @@
 {:deps {io.github.clojure/tools.build {:mvn/version "0.10.6"}}
  :paths ["src"]
 
- :aliases {:slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps {eftest/eftest {:mvn/version "0.6.0"}
+                               cloverage/cloverage {:mvn/version "1.2.4"}}
+                  :exec-fn cloverage.coverage/run-project
+                  :exec-args {:test-ns-path ["test"]
+                              :src-ns-path ["src"]
+                              :runner :eftest}}
+
+           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
                          slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
                   :exec-args {:lib io.github.abogoyavlensky/slim

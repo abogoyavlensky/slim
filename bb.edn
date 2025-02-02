@@ -2,4 +2,27 @@
  {:enter (println "Running task:" (:name (current-task)))
 
   deps {:doc "Install all deps"
-        :task (clojure "-P")}}}
+        :task (clojure "-P")}
+
+  fmt-check {:doc "Check code formatting"
+             :task (shell "cljfmt" "check")}
+
+  fmt {:doc "Fix code formatting"
+       :task (shell "cljfmt" "fix")}
+
+  lint-init {:doc "Linting project's classpath"
+             :task (shell "clj-kondo" "--parallel" "--dependencies" "--copy-configs"
+                     "--lint" (with-out-str (clojure "-Spath")))}
+
+  lint {:doc "Linting project's code"
+        :task (shell "clj-kondo" "--parallel" "--lint" "src" "test")}
+
+  test {:doc "Run tests"
+        :task (clojure "-X:test")}
+
+  check {:doc "Run all code checks and tests"
+         :depends [fmt lint test]}
+
+  ; Improve
+  build {:doc "Build lib"
+         :task (clojure "-T:slim build")}}}
