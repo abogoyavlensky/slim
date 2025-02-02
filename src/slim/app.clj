@@ -1,7 +1,30 @@
 (ns slim.app
-    (:require [clojure.tools.build.api :as b]))
+    (:require [clojure.tools.build.api :as b]
+              [clojure.spec.alpha :as s]))
+
+; Spec
+
+; Enable asserts for spec
+(s/check-asserts true)
+
+(s/def ::main-ns symbol?)
+(s/def ::target-dir string?)
+(s/def ::uber-file string?)
+(s/def ::class-dir string?)
+(s/def ::src-dirs (s/coll-of string?))
+
+(s/def ::params
+  (s/keys
+    :req-un [::main-ns]
+    :opt-un [::target-dir
+             ::uber-file
+             ::class-dir
+             ::src-dirs]))
+
+; Build
 
 (def ^:private TARGET-DIR "target")
+
 
 ; Delay to defer side effects (artifact downloads)
 (def ^:private basis
@@ -29,8 +52,9 @@
   :class-dir - class directory (optional, default: target/classes)"
   [{:keys [main-ns target-dir uber-file src-dirs class-dir]
     :or {target-dir TARGET-DIR
-         src-dirs ["src" "resources"]}}]
-  {:pre [(symbol? main-ns)]}
+         src-dirs ["src" "resources"]}
+    :as params}]
+  (s/assert ::params params)
   (b/delete {:path TARGET-DIR})
   (uber {:uber-file (or uber-file (format "%s/standalone.jar" target-dir))
          :class-dir (or class-dir (format "%s/classes" target-dir))
