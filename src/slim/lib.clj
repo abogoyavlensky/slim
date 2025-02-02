@@ -8,7 +8,37 @@
 ; Enable asserts for spec
 (s/check-asserts true)
 
-; TODO: add spec for params
+(s/def ::lib symbol?)
+(s/def ::version string?)
+(s/def ::target-dir string?)
+(s/def ::jar-file string?)
+(s/def ::class-dir string?)
+(s/def ::src-dirs (s/coll-of string?))
+(s/def ::resource-dirs (s/coll-of string?))
+(s/def ::scm (s/keys
+               :req-un [::url]
+               :opt-un [::connection
+                        ::developerConnection
+                        ::tag]))
+(s/def ::pom-data (s/coll-of vector? :kind vector?))
+(s/def ::url (s/and string? #(re-matches #"^https://.*" %)))
+(s/def ::basis-params map?)
+(s/def ::snapshot boolean?)
+
+(s/def ::params
+  (s/keys
+    :req-un [::lib
+             ::version]
+    :opt-un [::target-dir
+             ::jar-file
+             ::class-dir
+             ::src-dirs
+             ::resource-dirs
+             ::scm
+             ::pom-data
+             ::url
+             ::basis-params
+             ::snapshot]))
 
 ; Build
 
@@ -76,14 +106,14 @@
            class-dir
            scm
            pom-data
-           ; custom
+           ; custom params
            url
            basis-params
            snapshot]
     :or {snapshot false
          basis-params {:project "deps.edn"}}
     :as params}]
-  ; TODO: add params validation!
+  (s/assert ::params params)
   (let [version* (get-version version snapshot)
         target-dir* (or target-dir TARGET-DIR)]
     (-> params

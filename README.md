@@ -1,5 +1,7 @@
 # slim
 
+[![Clojars Project](https://img.shields.io/clojars/v/io.github.abogoyavlensky/slim.svg)](https://clojars.org/io.github.abogoyavlensky/slim)
+
 The slim way to build Clojure.
 
 ## Overview
