@@ -16,7 +16,7 @@
                          slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
                   :exec-args {:lib io.github.abogoyavlensky/slim
-                              :version "0.1.0"
+                              :version "0.2.0"
                               :url "https://github.com/abogoyavlensky/slim"
                               :description "The slim way to build Clojure"
                               :developer "Andrey Bogoyavlenskiy"}}}}
