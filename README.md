@@ -4,11 +4,11 @@ The slim way to build Clojure.
 
 ## Overview
 
-`slim` is a minimal build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for Clojure application, or build and deploy jar for a Clojure library with zero ceremony. It's quite opinionated and does not aim to be a general-purpose build tool. 
+`slim` is a minimal build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for an application, or build and deploy jar for a library with zero ceremony. It's quite opinionated and does not aim to be a general-purpose build tool. 
 
 ## Features
 
-- 🎯 **Minimal Configuration**: Uses standard `deps.edn` - no additional configuration files needed
+- 🎯 **Minimal Configuration**: Uses `deps.edn` - no additional configuration files needed
 - 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
 - 🔧 **Sensible Defaults**: Works out of the box with minimal configs for most Clojure projects
 
@@ -18,7 +18,7 @@ Add slim to your `deps.edn`:
 
 ```clojure
 {:aliases
- {:slim {:deps {io.github.abogoyavlensky/slim {:git/tag "v0.1.0" :git/sha "..."}}
+ {:slim {:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}}
          :ns-default slim.app
          :exec-args {:main-ns my-app.core}}}}
 ```
@@ -61,6 +61,11 @@ You can customize the build also with optional parameters. All available options
 - `:uber-file` (optional) - Name of the output uberjar (default: "target/standalone.jar")
 - `:src-dirs` (optional) - Source directories to include (default: ["src" "resources"])
 - `:class-dir` (optional) - class directory (default: "target/classes")
+
+#### Available commands
+
+- `build` - Builds an uberjar file with all dependencies included. The jar file will be created at the specified location (defaults to `target/standalone.jar`).
+
 
 ### Build: Library
 
