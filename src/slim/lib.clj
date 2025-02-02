@@ -1,12 +1,14 @@
 (ns slim.lib
   (:require [clojure.tools.build.api :as b]
-            [clojure.spec.alpha :as s]))
+            [clojure.spec.alpha :as s]
+            [clojure.string :as str]))
 
 ; Spec
 
 ; Enable asserts for spec
 (s/check-asserts true)
 
+; TODO: add spec for params
 
 ; Build
 
@@ -14,23 +16,18 @@
 (def ^:private SNAPSHOT-SUFFIX "-SNAPSHOT")
 
 (defn- get-version
-  [latest-version snapshot?]
-  (let [new-version (if (true? snapshot?)
+  [latest-version snapshot]
+  (let [new-version (if (true? snapshot)
                       (str latest-version SNAPSHOT-SUFFIX)
                       latest-version)]
     (println (format "New version: %s" new-version))
     new-version))
 
-(defn create-tag
-  "Create a git tag for the lib."
-  [{:keys [version]}]
-  (b/git-process
-    {:git-args ["tag" "-a" version "-m" (format "'Release version %s'" version)]}))
-
-(defn push-tag
-  "Push an existing git tag with latest lib version to the remote repository."
-  [{:keys [version]}]
-  (b/git-process {:git-args ["push" "origin" version]}))
+(def default-license
+  [:licenses
+   [:license
+    [:name "MIT License"]
+    [:url "https://opensource.org/license/mit"]]])
 
 (defn- get-license
   [license]
@@ -39,10 +36,7 @@
      [:license
       [:name (:name license)]
       [:url (:url license)]]]
-    [:licenses
-     [:license
-      [:name "MIT License"]
-      [:url "https://opensource.org/license/mit"]]]))
+    default-license))
 
 (defn- pom-template
   [{:keys [url description developer license]}]
@@ -54,10 +48,27 @@
                               [:name developer]]])
     true (conj (get-license license))))
 
+(defn- default-scm
+  [url]
+  (let [url-no-protocol (str/replace-first url #"^https://" "")]
+    {:url url
+     :connection (format "scm:git:git://%s.git" url-no-protocol)
+     :developerConnection (format "scm:git:ssh://git@%s.git" url-no-protocol)}))
+
+(defn- get-scm
+  [{:keys [url scm version]}]
+  (let [scm* (if (seq scm)
+               scm
+               (when (some? url)
+                 (default-scm url)))]
+    ; Return scm data with version if it was provided explicitly or in `url`
+    (when (some? scm*)
+      ; Add version to scm data only if it was not provided explicitly in `scm` param
+      (merge {:tag version} scm*))))
+
 (defn- parse-params
   [{:keys [lib
            version
-           tag  ; TODO remove!
            target-dir
            jar-file
            src-dirs
@@ -65,16 +76,18 @@
            class-dir
            scm
            pom-data
+           ; custom
+           url
            basis-params
-           snapshot?]
-    :or {snapshot? false
+           snapshot]
+    :or {snapshot false
          basis-params {:project "deps.edn"}}
     :as params}]
   ; TODO: add params validation!
-  (let [version* (get-version version snapshot?)
+  (let [version* (get-version version snapshot)
         target-dir* (or target-dir TARGET-DIR)]
     (-> params
-        (dissoc :version :snapshot? :basis-params)
+        (dissoc :version :snapshot :basis-params :url)
         (assoc
           :version version*
           :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir* lib version*))
@@ -83,8 +96,12 @@
           :class-dir (or class-dir (format "%s/classes" target-dir*))
           :src-dirs (or src-dirs ["src"])
           :resource-dirs (or resource-dirs ["resources"])
-          :scm (merge {:tag (or tag version)} scm)
+          :scm (get-scm {:url url
+                         :scm scm
+                         :version version})
           :pom-data (or pom-data (pom-template params))))))
+
+; Public API
 
 (defn build
   "Build a jar-file for the lib."
@@ -122,3 +139,14 @@
                 :pom-file (b/pom-path {:lib lib
                                        :class-dir class-dir})})
     (println "JAR has been deployed successfully!")))
+
+(defn create-tag
+  "Create a git tag for the lib."
+  [{:keys [version]}]
+  (b/git-process
+    {:git-args ["tag" "-a" version "-m" (format "'Release version %s'" version)]}))
+
+(defn push-tag
+  "Push an existing git tag with latest lib version to the remote repository."
+  [{:keys [version]}]
+  (b/git-process {:git-args ["push" "origin" version]}))

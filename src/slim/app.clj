@@ -42,6 +42,8 @@
            :basis @basis
            :main main-ns}))
 
+; Public API
+
 (defn build
   "Build an uberjar.
 

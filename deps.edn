@@ -1,37 +1,19 @@
-{:deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        io.github.clojure/tools.build {:mvn/version "0.10.6"}}
+{:deps {io.github.clojure/tools.build {:mvn/version "0.10.6"}}
  :paths ["src"]
 
- :aliases {:clein {:deps {io.github.noahtheduke/clein {:mvn/version "0.4.1"}}
-                   :main-opts ["-m" "noahtheduke.clein"]}
-           ;:clein/build {:lib io.github.abogoyavlensky/slim
-           ;              :main slim.build-lib
-           ;              :url "https://github.com/abogoyavlensky/slim"
-           ;              :version "0.1.0"
-           ;              :scm {:tag "0.1.0"
-           ;                    :url "https://github.com/abogoyavlensky/slim"
-           ;                    :connection "scm:git:git://github.com/abogoyavlensky/slim.git"
-           ;                    :developerConnection "scm:git:ssh://git@github.com/abogoyavlensky/slim.git"}
-           ;              :license {:name "MIT License"
-           ;                        :url "https://opensource.org/license/mit/"}
-           ;              :pom-data [[:developers
-           ;                          [:developer
-           ;                           [:name "Andrey Bogoyavlenskiy"]]]]}
-
-           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
+ :aliases {:slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
                          slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
                   :exec-args {:lib io.github.abogoyavlensky/slim
                               :version "0.1.0"
                               :url "https://github.com/abogoyavlensky/slim"
                               :description "The slim way to build Clojure"
-                              :developer "Andrey Bogoyavlenskiy"
+                              :developer "Andrey Bogoyavlenskiy"}}}}
 
-                              :snapshot? true
-
-                              :scm {:url "https://github.com/abogoyavlensky/slim"
-                                    :connection "scm:git:git://github.com/abogoyavlensky/slim.git"
-                                    :developerConnection "scm:git:ssh://git@github.com/abogoyavlensky/slim.git"}}}}}
+                              ; Keep for reference of a result config
+                              ;:scm {:url "https://github.com/abogoyavlensky/slim"
+                              ;      :connection "scm:git:git://github.com/abogoyavlensky/slim.git"
+                              ;      :developerConnection "scm:git:ssh://git@github.com/abogoyavlensky/slim.git"}}}}}
                               ;:pom-data [[:description "The slim way to build Clojure"]
                               ;           [:url "https://github.com/abogoyavlensky/slim"]
                               ;           [:licenses
