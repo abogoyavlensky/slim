@@ -68,8 +68,8 @@ You can customize the build also with optional parameters. All available options
 
 ## Inspired by
 
-- [application build](https://clojure.org/guides/tools_build#_compiled_uberjar_application_build) - from official tools.build guide
-- [build.tmpl](https://github.com/seancorfield/deps-new/blob/develop/resources/org/corfield/new/lib/build/build.tmpl) - from build-new lib template
+- [build-clj](https://github.com/seancorfield/build-clj/)
+- [application build guide](https://clojure.org/guides/tools_build#_compiled_uberjar_application_build)
 
 ## Alternatives
 
