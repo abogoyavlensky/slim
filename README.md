@@ -6,13 +6,15 @@ The slim way to build Clojure.
 
 ## Overview
 
-`slim` is a minimal build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for an application, or build and deploy jar for a library with zero ceremony. It's quite opinionated and does not aim to be a general-purpose build tool. 
+`slim` is a build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for an application, or build and deploy jar for a library with zero ceremony. It's quite opinionated, but has options for quite significant customization.
 
 ## Features
 
+- 🔄 **Versatile Building**: Can build applications (uberjar), and build and deploy libraries
 - 🎯 **Minimal Configuration**: Uses `deps.edn` - no additional configuration files needed
-- 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
 - 🔧 **Sensible Defaults**: Works out of the box with minimal configs for most Clojure projects
+- 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
+
 
 ## Quick Start: Build App
 
