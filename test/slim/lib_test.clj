@@ -1,6 +1,7 @@
 (ns slim.lib-test
   (:require [clojure.test :refer [deftest testing is]]
-            [slim.lib :as lib]))
+            [slim.lib :as lib])
+  (:import [clojure.lang ExceptionInfo]))
 
 (deftest default-scm-test
   (testing "default-scm with https URL"
@@ -24,13 +25,15 @@
     (let [scm {:url "https://custom.git/repo"
                :connection "custom-connection"
                :developerConnection "custom-dev-connection"}
-          result (#'lib/get-scm {:scm scm :version "2.0.0"})]
+          result (#'lib/get-scm {:scm scm
+                                 :version "2.0.0"})]
       (is (= (assoc scm :tag "2.0.0")
              result))))
 
   (testing "get-scm with URL only"
     (let [url "https://github.com/user/repo"
-          result (#'lib/get-scm {:url url :version "1.0.0"})]
+          result (#'lib/get-scm {:url url
+                                 :version "1.0.0"})]
       (is (= {:url url
               :tag "1.0.0"
               :connection "scm:git:git://github.com/user/repo.git"
@@ -100,7 +103,73 @@
              [:license
               [:name "MIT License"]
               [:url "https://opensource.org/license/mit"]]]]
-           (#'lib/pom-template {:url "https://example.com"}))))
+           (#'lib/pom-template {:url "https://example.com"})))))
+
+(deftest parse-params-test
+  (testing "required params validation"
+    (testing "fails without lib"
+      (is (thrown? ExceptionInfo
+                   (#'lib/parse-params {:version "1.0.0"}))))
+
+    (testing "fails without version"
+      (is (thrown? ExceptionInfo
+                   (#'lib/parse-params {:lib 'my/lib}))))
+
+    (testing "succeeds with required params"
+      (let [result (#'lib/parse-params {:lib 'my/lib
+                                        :version "1.0.0"})]
+        (is (= 'my/lib (:lib result)))
+        (is (= "1.0.0" (:version result))))))
+
+  (testing "important custom params"
+    (let [params {:lib 'my/lib
+                  :version "1.0.0"
+                  :url "https://github.com/user/lib"
+                  :developer "John Doe"
+                  :description "Test library"}
+          result (#'lib/parse-params params)]
+      (testing "processes url correctly"
+        (is (= "https://github.com/user/lib" (get-in result [:scm :url])))
+        (is (string? (get-in result [:scm :connection])))
+        (is (string? (get-in result [:scm :developerConnection]))))
+
+      (testing "includes developer in pom-data"
+        (is (some #(and (= :developers (first %))
+                        (= "John Doe" (get-in % [1 1 1])))
+                  (:pom-data result))))
+
+      (testing "includes description in pom-data"
+        (is (some #(and (= :description (first %))
+                        (= "Test library" (second %)))
+                  (:pom-data result))))))
+
+  (testing "optional params"
+    (let [params {:lib 'my/lib
+                  :version "1.0.0"
+                  :target-dir "custom-target"
+                  :jar-file "custom.jar"
+                  :src-dirs ["src" "extra-src"]
+                  :resource-dirs ["resources" "extra-resources"]
+                  :class-dir "custom-classes"
+                  :snapshot true}
+          result (#'lib/parse-params params)]
+      (testing "processes target-dir"
+        (is (= "custom-target" (:target-dir result))))
+
+      (testing "processes jar-file"
+        (is (= "custom.jar" (:jar-file result))))
+
+      (testing "processes src-dirs"
+        (is (= ["src" "extra-src"] (:src-dirs result))))
+
+      (testing "processes resource-dirs"
+        (is (= ["resources" "extra-resources"] (:resource-dirs result))))
+
+      (testing "processes class-dir"
+        (is (= "custom-classes" (:class-dir result))))
+
+      (testing "processes snapshot version"
+        (is (= "1.0.0-SNAPSHOT" (:version result))))))
 
   (testing "pom-template with only developer"
     (is (= [[:developers
