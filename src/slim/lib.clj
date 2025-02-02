@@ -21,6 +21,9 @@
                         ::developerConnection
                         ::tag]))
 (s/def ::pom-data (s/coll-of vector? :kind vector?))
+(s/def ::license (s/keys
+                   :req-un [::name
+                            ::url]))
 (s/def ::url (s/and string? #(re-matches #"^https://.*" %)))
 (s/def ::basis-params map?)
 (s/def ::snapshot boolean?)
@@ -36,6 +39,7 @@
              ::resource-dirs
              ::scm
              ::pom-data
+             ::license
              ::url
              ::basis-params
              ::snapshot]))
@@ -117,7 +121,7 @@
   (let [version* (get-version version snapshot)
         target-dir* (or target-dir TARGET-DIR)]
     (-> params
-        (dissoc :version :snapshot :basis-params :url)
+        (dissoc :version :snapshot :basis-params :url :license)
         (assoc
           :version version*
           :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir* lib version*))
