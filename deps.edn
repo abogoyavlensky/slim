@@ -2,12 +2,15 @@
  :paths ["src"]
 
  :aliases {:test {:extra-paths ["test"]
-                  :extra-deps {eftest/eftest {:mvn/version "0.6.0"}
-                               cloverage/cloverage {:mvn/version "1.2.4"}}
+                  :extra-deps {org.clojure/clojure {:mvn/version "1.12.0"}
+                               eftest/eftest {:mvn/version "0.6.0"}
+                               cloverage/cloverage {:mvn/version "1.2.4"}
+                               circleci/bond {:mvn/version "0.6.0"}}
                   :exec-fn cloverage.coverage/run-project
                   :exec-args {:test-ns-path ["test"]
                               :src-ns-path ["src"]
-                              :runner :eftest}}
+                              :runner :eftest
+                              :runner-opts {:multithread? false}}}
 
            :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
                          slipset/deps-deploy {:mvn/version "0.2.2"}}

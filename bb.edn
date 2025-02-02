@@ -2,7 +2,7 @@
  {:enter (println "Running task:" (:name (current-task)))
 
   deps {:doc "Install all deps"
-        :task (clojure "-P")}
+        :task (clojure "-P -X:test")}
 
   fmt-check {:doc "Check code formatting"
              :task (shell "cljfmt" "check")}
@@ -23,6 +23,6 @@
   check {:doc "Run all code checks and tests"
          :depends [fmt lint test]}
 
-  ; Improve
+  ; TODO: Improve
   build {:doc "Build lib"
          :task (clojure "-T:slim build")}}}

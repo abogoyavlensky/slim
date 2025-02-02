@@ -26,7 +26,7 @@
 (def ^:private TARGET-DIR "target")
 
 ; Delay to defer side effects (artifact downloads)
-(def ^:private basis
+(def basis
   (delay (b/create-basis {:project "deps.edn"})))
 
 (defn- uber
@@ -41,6 +41,17 @@
            :basis @basis
            :main main-ns}))
 
+(defn- parse-params
+  [{:keys [target-dir uber-file class-dir src-dirs]
+    :as params}]
+  (s/assert ::params params)
+  (let [target-dir* (or target-dir TARGET-DIR)]
+    (assoc params
+           :target-dir (or target-dir TARGET-DIR)
+           :src-dirs (or src-dirs ["src" "resources"])
+           :uber-file (or uber-file (format "%s/standalone.jar" target-dir*))
+           :class-dir (or class-dir (format "%s/classes" target-dir*)))))
+
 ; Public API
 
 (defn build
@@ -51,13 +62,8 @@
   :uber-file - uberjar file (optional, default: target/standalone.jar)
   :src-dirs - source directories (optional, default: [\"src\" \"resources\"])
   :class-dir - class directory (optional, default: target/classes)"
-  [{:keys [main-ns target-dir uber-file src-dirs class-dir]
-    :or {target-dir TARGET-DIR
-         src-dirs ["src" "resources"]}
-    :as params}]
-  (s/assert ::params params)
-  (b/delete {:path TARGET-DIR})
-  (uber {:uber-file (or uber-file (format "%s/standalone.jar" target-dir))
-         :class-dir (or class-dir (format "%s/classes" target-dir))
-         :main-ns main-ns
-         :src-dirs src-dirs}))
+  [params]
+  (let [{:keys [target-dir]
+         :as params*} (parse-params params)]
+    (b/delete {:path target-dir})
+    (uber params*)))
