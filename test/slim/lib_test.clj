@@ -198,89 +198,90 @@
              [:url "https://opensource.org/license/mit"]]]
            lib/default-license))))
 
-(deftest test-lib-build-params-validation-with-required-params-only
-  #_{:clj-kondo/ignore [:private-call]}
-  (bond/with-stub! [[b/delete (constantly nil)]
-                    [b/write-pom (constantly nil)]
-                    [b/copy-dir (constantly nil)]
-                    [b/jar (constantly nil)]]
+(deftest test-build-params-validation-with-required-params-only-and-writing-pom
+  (bond/with-spy [b/write-pom]
+    (bond/with-stub! [[b/delete (constantly nil)]
+                      [b/copy-dir (constantly nil)]
+                      [b/jar (constantly nil)]]
 
-    (lib/build {:lib 'io.test.my-app
-                :version "1.0.0"})
+      (lib/build {:lib 'io.test.my-app/another-lib
+                  :version "1.0.0"
+                  :target-dir "test/target"})
 
-    (is (= 1 (-> b/delete bond/calls count)))
-    (is (= [{:path "target"}]
-           (-> b/delete bond/calls first :args)))
+      (is (= 1 (-> b/delete bond/calls count)))
+      (is (= [{:path "test/target"}]
+             (-> b/delete bond/calls first :args)))
 
-    (is (= 1 (-> b/write-pom bond/calls count)))
-    (is (= {:class-dir "target/classes"
-            :jar-file "target/io.test.my-app-1.0.0.jar"
-            :lib 'io.test.my-app
-            :pom-data [[:licenses
-                        [:license
-                         [:name
-                          "MIT License"]
+      (is (= 1 (-> b/write-pom bond/calls count)))
+      (is (= {:class-dir "test/target/classes"
+              :jar-file "test/target/io.test.my-app/another-lib-1.0.0.jar"
+              :lib 'io.test.my-app/another-lib
+              :pom-data [[:licenses
+                          [:license
+                           [:name
+                            "MIT License"]
+                           [:url
+                            "https://opensource.org/license/mit"]]]]
+              :resource-dirs ["resources"]
+              :scm nil
+              :src-dirs ["src"]
+              :target-dir "test/target"
+              :version "1.0.0"}
+             (-> b/write-pom bond/calls first :args first (dissoc :basis))))
+
+      (is (= 1 (-> b/copy-dir bond/calls count)))
+      (is (= [{:src-dirs ["src" "resources"]
+               :target-dir "test/target/classes"}]
+             (-> b/copy-dir bond/calls first :args))))))
+
+(deftest test-build-custom-params-only-with-writing-pom
+  (bond/with-spy [b/write-pom]
+    (bond/with-stub! [[b/delete (constantly nil)]
+                      [b/copy-dir (constantly nil)]
+                      [b/jar (constantly nil)]]
+
+      (lib/build {:lib 'io.test.my-app/another-lib
+                  :version "1.0.0"
+                  :url "https://github.io/test/my-app"
+                  :developer "John Doe"
+                  :description "Test library"
+                  :target-dir "test/target"})
+
+      (is (= 1 (-> b/delete bond/calls count)))
+      (is (= [{:path "test/target"}]
+             (-> b/delete bond/calls first :args)))
+
+      (is (= 1 (-> b/write-pom bond/calls count)))
+      (is (= {:class-dir "test/target/classes"
+              :description "Test library"
+              :developer "John Doe"
+              :jar-file "test/target/io.test.my-app/another-lib-1.0.0.jar"
+              :lib 'io.test.my-app/another-lib
+              :pom-data [[:description
+                          "Test library"]
                          [:url
-                          "https://opensource.org/license/mit"]]]]
-            :resource-dirs ["resources"]
-            :scm nil
-            :src-dirs ["src"]
-            :target-dir "target"
-            :version "1.0.0"}
-           (-> b/write-pom bond/calls first :args first (dissoc :basis))))
+                          "https://github.io/test/my-app"]
+                         [:developers
+                          [:developer
+                           [:name
+                            "John Doe"]]]
+                         [:licenses
+                          [:license
+                           [:name
+                            "MIT License"]
+                           [:url
+                            "https://opensource.org/license/mit"]]]]
+              :resource-dirs ["resources"]
+              :scm {:connection "scm:git:git://github.io/test/my-app.git"
+                    :developerConnection "scm:git:ssh://git@github.io/test/my-app.git"
+                    :tag "1.0.0"
+                    :url "https://github.io/test/my-app"}
+              :src-dirs ["src"]
+              :target-dir "test/target"
+              :version "1.0.0"}
+             (-> b/write-pom bond/calls first :args first (dissoc :basis))))
 
-    (is (= 1 (-> b/copy-dir bond/calls count)))
-    (is (= [{:src-dirs ["src" "resources"]
-             :target-dir "target/classes"}]
-           (-> b/copy-dir bond/calls first :args)))))
-
-(deftest test-lib-build-params-validation-with-required-custom-params-only
-  (bond/with-stub! [[b/delete (constantly nil)]
-                    [b/write-pom (constantly nil)]
-                    [b/copy-dir (constantly nil)]
-                    [b/jar (constantly nil)]]
-
-    (lib/build {:lib 'io.test.my-app
-                :version "1.0.0"
-                :url "https://github.io/test/my-app"
-                :developer "John Doe"
-                :description "Test library"})
-
-    (is (= 1 (-> b/delete bond/calls count)))
-    (is (= [{:path "target"}]
-           (-> b/delete bond/calls first :args)))
-
-    (is (= 1 (-> b/write-pom bond/calls count)))
-    (is (= {:class-dir "target/classes"
-            :description "Test library"
-            :developer "John Doe"
-            :jar-file "target/io.test.my-app-1.0.0.jar"
-            :lib 'io.test.my-app
-            :pom-data [[:description
-                        "Test library"]
-                       [:url
-                        "https://github.io/test/my-app"]
-                       [:developers
-                        [:developer
-                         [:name
-                          "John Doe"]]]
-                       [:licenses
-                        [:license
-                         [:name
-                          "MIT License"]
-                         [:url
-                          "https://opensource.org/license/mit"]]]]
-            :resource-dirs ["resources"]
-            :scm {:connection "scm:git:git://github.io/test/my-app.git"
-                  :developerConnection "scm:git:ssh://git@github.io/test/my-app.git"
-                  :tag "1.0.0"
-                  :url "https://github.io/test/my-app"}
-            :src-dirs ["src"]
-            :target-dir "target"
-            :version "1.0.0"}
-           (-> b/write-pom bond/calls first :args first (dissoc :basis))))
-
-    (is (= 1 (-> b/copy-dir bond/calls count)))
-    (is (= [{:src-dirs ["src" "resources"]
-             :target-dir "target/classes"}]
-           (-> b/copy-dir bond/calls first :args)))))
+      (is (= 1 (-> b/copy-dir bond/calls count)))
+      (is (= [{:src-dirs ["src" "resources"]
+               :target-dir "test/target/classes"}]
+             (-> b/copy-dir bond/calls first :args))))))
