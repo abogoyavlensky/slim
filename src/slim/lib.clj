@@ -31,6 +31,28 @@
   [{:keys [version]}]
   (b/git-process {:git-args ["push" "origin" version]}))
 
+(defn- get-license
+  [license]
+  (if (seq license)
+    [:licenses
+     [:license
+      [:name (:name license)]
+      [:url (:url license)]]]
+    [:licenses
+     [:license
+      [:name "MIT License"]
+      [:url "https://opensource.org/license/mit/"]]]))
+
+(defn- pom-template
+  [{:keys [url description developer license]}]
+  (cond-> []
+    (some? description) (conj [:description description])
+    (some? url) (conj [:url url])
+    (some? developer) (conj [:developers
+                             [:developer
+                              [:name developer]]])
+    true (conj (get-license license))))
+
 (defn build
   "Build a jar-file for the lib."
   [{:keys [lib
@@ -43,6 +65,7 @@
            resource-dirs
            class-dir
            scm
+           pom-data
            basis-params]
     :or {target-dir TARGET-DIR
          src-dirs ["src"]
@@ -62,7 +85,8 @@
                       :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir lib version*))
                       :basis (b/create-basis basis-params)
                       :class-dir class-dir*
-                      :scm scm*))]
+                      :scm scm*
+                      :pom-data (or pom-data (pom-template params))))]
 
     (println (format "Building JAR %s..." (:jar-file params*)))
     (b/delete {:path target-dir})
