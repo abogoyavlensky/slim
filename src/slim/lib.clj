@@ -1,7 +1,7 @@
 (ns slim.lib
-  (:require [clojure.tools.build.api :as b]
-            [clojure.spec.alpha :as s]
-            [clojure.string :as str]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.string :as str]
+            [clojure.tools.build.api :as b]))
 
 ; Spec
 
@@ -106,7 +106,8 @@
 (defn build
   "Build a jar-file for the lib."
   [params]
-  (let [{:keys [target-dir src-dirs resource-dirs class-dir] :as params*} (parse-params params)]
+  (let [{:keys [target-dir src-dirs resource-dirs class-dir]
+         :as params*} (parse-params params)]
     (println (format "Building JAR %s..." (:jar-file params*)))
     (b/delete {:path target-dir})
     (b/write-pom params*)

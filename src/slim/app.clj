@@ -1,6 +1,6 @@
 (ns slim.app
-    (:require [clojure.tools.build.api :as b]
-              [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.tools.build.api :as b]))
 
 ; Spec
 
@@ -24,7 +24,6 @@
 ; Build
 
 (def ^:private TARGET-DIR "target")
-
 
 ; Delay to defer side effects (artifact downloads)
 (def ^:private basis
