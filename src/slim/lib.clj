@@ -22,18 +22,14 @@
 
 (defn create-tag
   "Create a git tag for the lib."
-  [{version-name :version
-    :as opts}]
+  [{:keys [version]}]
   (b/git-process
-    {:git-args ["tag" "-a" version-name "-m" (format "'Release version %s'" version-name)]})
-  opts)
+    {:git-args ["tag" "-a" version "-m" (format "'Release version %s'" version)]}))
 
 (defn push-tag
   "Push an existing git tag with latest lib version to the remote repository."
-  [{version-name :version
-    :as opts}]
-  (b/git-process {:git-args ["push" "origin" version-name]})
-  opts)
+  [{:keys [version]}]
+  (b/git-process {:git-args ["push" "origin" version]}))
 
 (defn build
   "Build a jar-file for the lib."
@@ -63,7 +59,6 @@
                     (dissoc :version :snapshot? :basis-params)
                     (assoc
                       :version version*
-                      :tag (or tag version)
                       :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir lib version*))
                       :basis (b/create-basis basis-params)
                       :class-dir class-dir*
@@ -75,20 +70,29 @@
     (b/copy-dir {:src-dirs (concat src-dirs resource-dirs)
                  :target-dir class-dir*})
     (b/jar params*)
-    (println "JAR has been built successfully!")))
+    (println "JAR has been built successfully!")
+    params*))
 
+(defn install
+  "Build and install jar-file to the local repo."
+  [params]
+  (-> params
+      (build)
+      (b/install))
+  (println "JAR has been installed to local repo successfully!"))
 
-;(defn install
-;  "Build and install jar-file to the local repo."
-;  [opts]
-;  (-> opts
-;      (build)
-;      (build-clj/install)))
-;
-;
-;(defn deploy
-;  "Build and deploy the jar-file to Clojars."
-;  [opts]
-;  (-> opts
-;      (build)
-;      (build-clj/deploy)))
+(defn deploy
+  "Build and deploy the jar-file to Clojars."
+  [params]
+  (let [{:keys [jar-file lib class-dir]} (build params)
+        ; Require deploy function dynamically to avoid dependency
+        ; if Slim is used just for building application uberjar.
+        ; To build and deploy the lib, add the following deps:
+        ; slipset/deps-deploy {:mvn/version "LATEST"}
+        deploy-fn (requiring-resolve 'deps-deploy.deps-deploy/deploy)]
+    (println "Deploying JAR to Clojars...")
+    (deploy-fn {:installer :remote
+                :artifact (b/resolve-path jar-file)
+                :pom-file (b/pom-path {:lib lib
+                                       :class-dir class-dir})})
+    (println "JAR has been deployed successfully!")))

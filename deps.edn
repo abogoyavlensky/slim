@@ -18,7 +18,8 @@
            ;                          [:developer
            ;                           [:name "Andrey Bogoyavlenskiy"]]]]}
 
-           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}}
+           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
+                         slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
                   :exec-args {:lib io.github.abogoyavlensky/slim
                               :version "0.1.0"

@@ -9,8 +9,8 @@ The slim way to build Clojure.
 ## Features
 
 - 🎯 **Minimal Configuration**: Uses standard `deps.edn` - no additional configuration files needed
-- 📦 **Zero Dependencies**: Built on top of official `tools.build`
-- 🔧 **Sensible Defaults**: Works out of the box for most Clojure projects
+- 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
+- 🔧 **Sensible Defaults**: Works out of the box with minimal configs for most Clojure projects
 
 ## Quick Start: Build App
 
