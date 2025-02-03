@@ -67,8 +67,10 @@ You can customize the build also with optional parameters. All available options
 
 #### Available commands
 
-- `build` - Builds an uberjar file with all dependencies included. The jar file will be created at the specified location (defaults to `target/standalone.jar`).
-
+#### Available commands
+| Command  | Description                                                                                                                                              |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `build`  | Builds an uberjar file with all dependencies included. The uberjar file will be created at the specified location (defaults to `target/standalone.jar`). |
 
 ### Build: Library
 Builds and deploys jar file for a library.
@@ -121,16 +123,12 @@ You can customize the build with optional parameters for extended meta informati
 
 #### Available commands
 
-- `build` - Builds a jar file for the library.
-  - `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version
-- `install` - Builds and installs the jar to local Maven repository
-  - `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version
-  - builds the jar file automatically before installing it
-- `deploy` - Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables)
-  - `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version
-  - builds the jar file automatically before deploying it
-- `create-tag` - Creates a git tag for the library version
-  - `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`
+| Command   | Description                                                                                                       | Options                                                                                                     |
+|-----------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
+| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
+| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
+| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false` |
 
 #### Custom configuration
 
