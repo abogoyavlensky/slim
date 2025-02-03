@@ -95,6 +95,16 @@
     default-license))
 
 (defn- pom-template
+  "Generate a template for POM file data.
+
+  Parameters:
+  - url (string): The project URL
+  - description (string): Project description
+  - developer (string): Developer name
+  - license (map): License information with :name and :url keys
+  
+  Returns:
+  - vector: POM data in vector format with optional elements based on provided parameters"
   [{:keys [url description developer license]}]
   (cond-> []
     (some? description) (conj [:description description])
@@ -112,6 +122,15 @@
      :developerConnection (format "scm:git:ssh://git@%s.git" url-no-protocol)}))
 
 (defn- get-scm
+  "Get SCM (Source Control Management) information for the library.
+  
+  Parameters:
+  - url (string): The project URL
+  - scm (map): Optional SCM configuration map
+  - version (string): The version string
+  
+  Returns:
+  - map: SCM information including connection details and version tag, or nil if no SCM info available"
   [{:keys [url scm version]}]
   (let [scm* (if (seq scm)
                scm
