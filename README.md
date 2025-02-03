@@ -6,7 +6,7 @@ The slim way to build Clojure.
 
 ## Overview
 
-`slim` is a build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for an application, or build and deploy jar for a library with zero ceremony. It's quite opinionated, but has options for significant customization.
+`slim` is a build tool for Clojure projects that emphasizes simplicity and minimal configuration. It can help you build uberjar for an application, or build and deploy jar for a library with zero ceremony.
 
 ## Features
 
@@ -129,10 +129,8 @@ You can customize the build with optional parameters for extended meta informati
 - `deploy` - Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables)
   - `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version
   - builds the jar file automatically before deploying it
-
-Additional commands for convenience to mange git tags:
 - `create-tag` - Creates a git tag for the library version
-- `push-tag` - Pushes the git tag for the library version to remote repository
+  - `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`
 
 #### Custom configuration
 

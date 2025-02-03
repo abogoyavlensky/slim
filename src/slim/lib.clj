@@ -175,13 +175,15 @@
                                        :class-dir class-dir})})
     (println "JAR has been deployed successfully!")))
 
-(defn create-tag
-  "Create a git tag for the lib."
-  [{:keys [version]}]
-  (b/git-process
-    {:git-args ["tag" "-a" version "-m" (format "'Release version %s'" version)]}))
+(defn tag
+  "Create a git tag for the lib.
 
-(defn push-tag
-  "Push an existing git tag with latest lib version to the remote repository."
-  [{:keys [version]}]
-  (b/git-process {:git-args ["push" "origin" version]}))
+  Parameters:
+  - `:version` (string): The version to tag.
+  - `:push` (boolean): Whether to push the tag to the remote repository. Default is `false`."
+  [{:keys [version push msg]}]
+  (b/git-process
+    (let [msg (or msg (format "'Release version %s'" version))]
+      {:git-args ["tag" "-a" version "-m" msg]}))
+  (when (true? push)
+    (b/git-process {:git-args ["push" "origin" version]})))

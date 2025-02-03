@@ -10,7 +10,7 @@
   fmt {:doc "Fix code formatting"
        :task (shell "cljfmt" "fix")}
 
-  lint-init {:doc "Linting project's classpath"
+  lint-init {:doc "Import linting configs"
              :task (shell "clj-kondo" "--parallel" "--dependencies" "--copy-configs"
                      "--lint" (with-out-str (clojure "-Spath")))}
 
@@ -20,9 +20,20 @@
   test {:doc "Run tests"
         :task (clojure "-X:test")}
 
-  check {:doc "Run all code checks and tests"
-         :depends [fmt lint test]}
+  outdated-check {:doc "Check outdated Clojure deps versions"
+                  :task (clojure "-M:outdated")}
 
-  ; TODO: Improve
-  build {:doc "Build lib"
-         :task (clojure "-T:slim build")}}}
+  outdated {:doc "Upgrade outdated Clojure deps versions"
+            :task (clojure "-M:outdated --upgrade --force")}
+
+  check {:doc "Run all code checks and tests"
+         :depends [fmt lint outdated test]}
+
+  deploy-snapshot {:doc "Deploy snapshot version to Clojars"
+                   :task (clojure "-T:slim deploy :snapshot true")}
+
+  deploy-release {:doc "Deploy release version to Clojars"
+                  :task (clojure "-T:slim deploy")}
+
+  release {:doc "Create and push git tag for release"
+           :task (clojure "-T:slim tag :push true")}}}

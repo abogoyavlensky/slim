@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yaml
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ checks ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/cache-clojure-deps
+      - uses: jdx/mise-action@v2
+        with:
+          install_args: "babashka java clojure"
+      - name: Run tests
+        env:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+          CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+        run: bb deploy-snapshot
