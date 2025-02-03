@@ -1,4 +1,11 @@
 (ns slim.lib
+  "A set of functions for building and deploying Clojure libraries.
+
+  The main functions are:
+  - build: Create a JAR file
+  - install: Build and install to local repo
+  - deploy: Build and deploy to Clojars
+  - tag: Create a Git tag for the version"
   (:require [clojure.spec.alpha :as s]
             [clojure.string :as str]
             [clojure.tools.build.api :as b]))
@@ -50,6 +57,14 @@
 (def ^:private SNAPSHOT-SUFFIX "-SNAPSHOT")
 
 (defn- get-version
+  "Get the version string for the library.
+  
+  Parameters:
+  - latest-version (string): The base version number
+  - snapshot (boolean): Whether this is a snapshot version
+  
+  Returns:
+  - string: The complete version string with optional SNAPSHOT suffix"
   [latest-version snapshot]
   (let [new-version (if (true? snapshot)
                       (str latest-version SNAPSHOT-SUFFIX)
@@ -64,6 +79,13 @@
     [:url "https://opensource.org/license/mit"]]])
 
 (defn- get-license
+  "Get the license information for the library.
+  
+  Parameters:
+  - license (map): A map containing :name and :url keys for the license
+  
+  Returns:
+  - vector: License information in POM format, using default MIT license if none provided"
   [license]
   (if (seq license)
     [:licenses

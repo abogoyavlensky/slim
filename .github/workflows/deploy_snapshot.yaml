@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Snapshot
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka java clojure"
-      - name: Run tests
+      - name: Deploy Snapshot
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}

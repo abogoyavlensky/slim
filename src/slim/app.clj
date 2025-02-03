@@ -1,4 +1,6 @@
 (ns slim.app
+  "A namespace for building uberjars with minimal configuration.
+  Provides a simple API for creating standalone JARs from Clojure projects."
   (:require [clojure.spec.alpha :as s]
             [clojure.tools.build.api :as b]))
 
@@ -30,6 +32,13 @@
   (delay (b/create-basis {:project "deps.edn"})))
 
 (defn- uber
+  "Build an uberjar with the specified parameters.
+  
+  Parameters:
+  :main-ns - main namespace to compile
+  :class-dir - directory for compiled classes
+  :uber-file - output jar file path
+  :src-dirs - source directories to include"
   [{:keys [class-dir uber-file main-ns src-dirs]}]
   (b/copy-dir {:src-dirs src-dirs
                :target-dir class-dir})
@@ -42,6 +51,16 @@
            :main main-ns}))
 
 (defn- parse-params
+  "Parse and validate build parameters, filling in default values.
+  
+  Parameters:
+  :main-ns - main namespace to compile (required)
+  :target-dir - target directory (optional)
+  :uber-file - output jar file path (optional) 
+  :src-dirs - source directories to include (optional)
+  :class-dir - directory for compiled classes (optional)
+  
+  Returns a map with all parameters populated with defaults where not specified."
   [{:keys [target-dir uber-file class-dir src-dirs]
     :as params}]
   (s/assert ::params params)
