@@ -1,6 +1,8 @@
 # slim
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.abogoyavlensky/slim.svg)](https://clojars.org/io.github.abogoyavlensky/slim)
+[![cljdoc badge](https://cljdoc.org/badge/io.github.abogoyavlensky/slim)](https://cljdoc.org/jump/release/io.github.abogoyavlensky/slim)
+[![CI](https://github.com/abogoyavlensky/slim/actions/workflows/snapshot.yaml/badge.svg?branch=master)](https://github.com/abogoyavlensky/slim/actions/workflows/snapshot.yaml)
 
 The slim way to build Clojure.
 
