@@ -15,7 +15,7 @@
            :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "2.11.1264"}}
                       :main-opts ["-m" "antq.core" "--no-diff"]}
 
-           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "../slim"}
+           :slim {:deps {io.github.abogoyavlensky/slim {:local/root "."}
                          slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
                   :exec-args {:lib io.github.abogoyavlensky/slim
@@ -23,17 +23,3 @@
                               :url "https://github.com/abogoyavlensky/slim"
                               :description "The slim way to build Clojure"
                               :developer "Andrey Bogoyavlenskiy"}}}}
-
-                              ; Keep for reference of a result config
-                              ;:scm {:url "https://github.com/abogoyavlensky/slim"
-                              ;      :connection "scm:git:git://github.com/abogoyavlensky/slim.git"
-                              ;      :developerConnection "scm:git:ssh://git@github.com/abogoyavlensky/slim.git"}}}}}
-                              ;:pom-data [[:description "The slim way to build Clojure"]
-                              ;           [:url "https://github.com/abogoyavlensky/slim"]
-                              ;           [:licenses
-                              ;            [:license
-                              ;             [:name "MIT License"]
-                              ;             [:url "https://opensource.org/license/mit/"]]]
-                              ;           [:developers
-                              ;            [:developer
-                              ;             [:name "Andrey Bogoyavlenskiy"]]]]}}}}
