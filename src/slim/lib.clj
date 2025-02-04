@@ -57,14 +57,14 @@
 (def ^:private SNAPSHOT-SUFFIX "-SNAPSHOT")
 
 (defn- get-version
-  "Get the version string for the library.
+  "Gets the version string for the library.
   
   Parameters:
   - latest-version (string): The base version number
   - snapshot (boolean): Whether this is a snapshot version
   
   Returns:
-  - string: The complete version string with optional SNAPSHOT suffix"
+  - string: The complete version string with an optional SNAPSHOT suffix"
   [latest-version snapshot]
   (let [new-version (if (true? snapshot)
                       (str latest-version SNAPSHOT-SUFFIX)
@@ -79,13 +79,13 @@
     [:url "https://opensource.org/license/mit"]]])
 
 (defn- get-license
-  "Get the license information for the library.
+  "Gets the license information for the library.
   
   Parameters:
-  - license (map): A map containing :name and :url keys for the license
+  - license (map): A map containing the :name and :url keys for the license
   
   Returns:
-  - vector: License information in POM format, using default MIT license if none provided"
+  - vector: The license information in POM format, using the default MIT license if none provided"
   [license]
   (if (seq license)
     [:licenses
@@ -122,15 +122,15 @@
      :developerConnection (format "scm:git:ssh://git@%s.git" url-no-protocol)}))
 
 (defn- get-scm
-  "Get SCM (Source Control Management) information for the library.
+  "Gets the SCM (Source Control Management) information for the library.
   
   Parameters:
   - url (string): The project URL
-  - scm (map): Optional SCM configuration map
+  - scm (map): The optional SCM configuration map
   - version (string): The version string
   
   Returns:
-  - map: SCM information including connection details and version tag, or nil if no SCM info available"
+  - map: The SCM information including connection details and version tag, or nil if no SCM info available"
   [{:keys [url scm version]}]
   (let [scm* (if (seq scm)
                scm
@@ -179,7 +179,10 @@
 ; Public API
 
 (defn build
-  "Build a jar-file for the lib."
+  "Builds a jar file for the library.
+
+  Parameters:
+  - params (map): A map containing build configuration parameters"
   [params]
   (let [{:keys [target-dir src-dirs resource-dirs class-dir]
          :as params*} (parse-params params)]
@@ -193,7 +196,10 @@
     params*))
 
 (defn install
-  "Build and install jar-file to the local repo."
+  "Builds and installs the jar file to the local repository.
+
+  Parameters:
+  - params (map): A map containing build configuration parameters"
   [params]
   (-> params
       (build)
@@ -201,7 +207,10 @@
   (println "JAR has been installed to local repo successfully!"))
 
 (defn deploy
-  "Build and deploy the jar-file to Clojars."
+  "Builds and deploys the jar file to Clojars.
+
+  Parameters:
+  - params (map): A map containing build and deployment configuration parameters"
   [params]
   (let [{:keys [jar-file lib class-dir]} (build params)
         ; Require deploy function dynamically to avoid dependency
@@ -217,11 +226,12 @@
     (println "JAR has been deployed successfully!")))
 
 (defn tag
-  "Create a git tag for the lib.
+  "Creates a git tag for the library version.
 
   Parameters:
-  - `:version` (string): The version to tag.
-  - `:push` (boolean): Whether to push the tag to the remote repository. Default is `false`."
+  - version (string): The version to tag
+  - push (boolean): Whether to push the tag to the remote repository (default: false)
+  - msg (string): The optional message for the tag (default: 'Release version X.Y.Z')"
   [{:keys [version push msg]}]
   (b/git-process
     (let [msg (or msg (format "'Release version %s'" version))]
