@@ -160,10 +160,14 @@ or tag, you can pass the `:scm` option with a value:
 {:url "https://github.com/username/lib"
  :connection "scm:git:git://github.com/username/lib.git"
  :developerConnection "scm:git:ssh://git@github.com/username/lib.git"
- :tag "v0.1.0}}}}}
+ :tag "v0.1.0"}
 ```
 
 *Note: For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
+
+## Examples
+
+- [Slim](https://github.com/abogoyavlensky/slim/blob/cf80181d0054738e1fd74defb5a67516fda2d77c/deps.edn#L18-L25)
 
 ## Inspired by
 
