@@ -59,13 +59,11 @@ You can customize the build also with optional parameters. All available options
              :class-dir "custom-classes"}}
 ```
 
-- `:main-ns` (**required**) - Main namespace to compile
-- `:target-dir` (optional) - Target directory for build artifacts (default: "target")
-- `:uber-file` (optional) - Name of the output uberjar (default: "target/standalone.jar")
-- `:src-dirs` (optional) - Source directories to include (default: ["src" "resources"])
-- `:class-dir` (optional) - class directory (default: "target/classes")
-
-#### Available commands
+- `:main-ns` (**required**) - Main namespace to compile.
+- `:target-dir` (optional) - Target directory for build artifacts (default: "target").
+- `:uber-file` (optional) - Name of the output uberjar (default: "target/standalone.jar").
+- `:src-dirs` (optional) - Source directories to include (default: ["src" "resources"]).
+- `:class-dir` (optional) - class directory (default: "target/classes").
 
 #### Available commands
 | Command  | Description                                                                                                                                              |
@@ -74,7 +72,7 @@ You can customize the build also with optional parameters. All available options
 
 ### Build: Library
 Builds and deploys jar file for a library.
-The minimal configuration requires the library name and version. Also requires `slipset/deps-deploy` separate dependency to deploy the library:
+The minimal configuration requires the library name and version. Also requires `slipset/deps-deploy` separate dependency to deploy the library to Clojars:
 
 ```clojure
 {:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}
@@ -82,6 +80,12 @@ The minimal configuration requires the library name and version. Also requires `
  :ns-default slim.lib
  :exec-args {:lib my-org/my-lib
              :version "0.1.0"}}
+```
+
+Install locally:
+
+```shell
+clojure -T:slim install
 ```
 
 Run the build and deploy snapshot version:
@@ -114,26 +118,26 @@ You can customize the build with optional parameters for extended meta informati
                        :url "https://www.apache.org/licenses/LICENSE-2.0"}}}
 ```
 
-- `:lib` (**required**) - Library name in org/lib format
-- `:version` (**required**) - Library version. Version will be used as git tag as-is. If you want to customize (add prefix or anything else)
-- `:url` (optional) - Project URL. It will be used as an SCM url as well. If you have separate url please define separate `:scm` option
-- `:description` (optional) - Project description
-- `:developer` (optional) - Developer name
-- `:license` (optional) If not set, by default is "MIT License"
+- `:lib` (**required**) - Library name in org/lib format.
+- `:version` (**required**) - Library version. Version will be used as git tag as-is. If you want to customize it please use `:scm` option.
+- `:url` (optional) - Project URL. Also, it will be used as an SCM url as well. If you have separate url please define separate `:scm` option.
+- `:description` (optional) - Project description.
+- `:developer` (optional) - Developer name.
+- `:license` (optional) If not set, by default is "MIT License".
 
 #### Available commands
 
-| Command   | Description                                                                                                       | Options                                                                                                     |
-|-----------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
-| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
-| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version                          |
-| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false` |
+| Command   | Description                                                                                                       | Options                                                                                                      |
+|-----------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be built as a snapshot version. Default is `false`.         |
+| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be installed as a snapshot version. Default is `false`.     |
+| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version. Default is `false`.      |
+| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`. |
 
 #### Custom configuration
 
-Options `:url`, `:description` and `:developer` are used to generate pom-file for the library.
-If you need to customize the pom-file you can pass `:pom-data` option and it will have precedence over other options.
+Options `:url`, `:description`, `:developer` and `:license` are used to generate pom-file for the library.
+If you need to customize the pom-file you can pass `:pom-data` option, and it will have precedence over other options.
 An example of `:pom-data`:
 ```clojure
 [[:description "My awesome library"]
