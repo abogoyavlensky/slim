@@ -134,15 +134,17 @@ The options `:url`, `:description`, `:developer`, and `:license` are used to gen
 If you need to customize the pom-file, you can pass the `:pom-data` option, which will take precedence over other options.
 An example of `:pom-data`:
 ```clojure
-[[:description "My awesome library"]
- [:url "https://github.com/username/lib"]
- [:licenses
-  [:license
-   [:name "MIT License"]
-   [:url "https://opensource.org/license/mit/"]]]
- [:developers
-  [:developer
-   [:name "Person Name"]]]]
+{...
+ :exec-args {...
+             :pom-data [[:description "My awesome library"]
+                        [:url "https://github.com/username/lib"]
+                        [:licenses
+                         [:license
+                          [:name "MIT License"]
+                          [:url "https://opensource.org/license/mit/"]]]
+                        [:developers
+                         [:developer
+                          [:name "Person Name"]]]]}}
 ```
 
 By default, `:scm` is generated using `:url` (or `:scm-url`) and `:version` (as tag).
@@ -151,10 +153,12 @@ and it allows you to preview doc for each snapshot.
 If you need to customize your SCM repository data, you can pass the `:scm` option with a value:
 
 ```clojure
-{:url "https://github.com/username/lib"
- :connection "scm:git:git://github.com/username/lib.git"
- :developerConnection "scm:git:ssh://git@github.com/username/lib.git"
- :tag "v0.1.0"}
+{...
+ :exec-args {...
+             :scm {:url "https://github.com/username/lib"
+                   :connection "scm:git:git://github.com/username/lib.git"
+                   :developerConnection "scm:git:ssh://git@github.com/username/lib.git"
+                   :tag "v0.1.0"}}}
 ```
 
 *Note: For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
