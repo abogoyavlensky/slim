@@ -115,9 +115,7 @@ You can customize the build with optional parameters for extended metadata infor
              :version "0.1.0"
              :url "https://github.com/my-org/my-lib"
              :description "My awesome library"
-             :developer "Your Name"
-             :license {:name "Apache License 2.0"
-                       :url "https://www.apache.org/licenses/LICENSE-2.0"}}}
+             :developer "Your Name"}}
 ```
 
 - `:lib` (**required**) - Library name in org/lib format.
