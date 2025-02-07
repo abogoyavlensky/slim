@@ -122,19 +122,11 @@ You can customize the build with optional parameters for extended metadata infor
 
 - `:lib` (**required**) - Library name in org/lib format.
 - `:version` (**required**) - Library version. The version will be used as a git tag as-is. If you want to customize it, please use the `:scm` option.
-- `:url` (optional) - Project URL. It will also be used as the SCM URL. If you have a separate URL, please define a separate `:scm` option.
+- `:url` (optional) - Project URL. It will also be used as the SCM URL if option `:scm-url` is not set.
+- `:scm-url` (optional) - Repository URL. If not set, defaults to `:url`.
 - `:description` (optional) - Project description.
 - `:developer` (optional) - Developer name.
 - `:license` (optional) - If not set, defaults to "MIT License".
-
-#### Available commands
-
-| Command   | Description                                                                                                       | Options                                                                                                      |
-|-----------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be built as a snapshot version. Default is `false`.         |
-| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be installed as a snapshot version. Default is `false`.     |
-| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version. Default is `false`.      |
-| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`. |
 
 #### Custom configuration
 
@@ -153,8 +145,7 @@ An example of `:pom-data`:
    [:name "Person Name"]]]]
 ```
 
-By default, `:scm` is generated using `:url` and `:version` (as tag). If you need to change your SCM repository URL
-or tag, you can pass the `:scm` option with a value:
+By default, `:scm` is generated using `:url`, `:scm-url` and `:version` (as tag). If you need to customize your SCM repository data, you can pass the `:scm` option with a value:
 
 ```clojure
 {:url "https://github.com/username/lib"
@@ -164,6 +155,15 @@ or tag, you can pass the `:scm` option with a value:
 ```
 
 *Note: For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
+
+#### Available commands
+
+| Command   | Description                                                                                                       | Options                                                                                                      |
+|-----------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be built as a snapshot version. Default is `false`.         |
+| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be installed as a snapshot version. Default is `false`.     |
+| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version. Default is `false`.      |
+| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`. |
 
 ## Examples
 

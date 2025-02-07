@@ -116,30 +116,36 @@
 
 (defn- default-scm
   [url]
-  (let [url-no-protocol (str/replace-first url #"^https://" "")]
-    {:url url
-     :connection (format "scm:git:git://%s.git" url-no-protocol)
-     :developerConnection (format "scm:git:ssh://git@%s.git" url-no-protocol)}))
+  (when url
+    (let [url-no-protocol (str/replace-first url #"^https://" "")]
+      {:url url
+       :connection (format "scm:git:git://%s.git" url-no-protocol)
+       :developerConnection (format "scm:git:ssh://git@%s.git" url-no-protocol)})))
+
+(defn- git-sha-latest
+  []
+  (b/git-process {:git-args ["rev-parse" "HEAD"]}))
 
 (defn- get-scm
   "Gets the SCM (Source Control Management) information for the library.
   
   Parameters:
   - url (string): The project URL
-  - scm (map): The optional SCM configuration map
+  - scm-url (string): Optional SCM-specific URL for SCM configuration, in case it differs with url
+  - scm (map): Optional SCM configuration map containing :url, :connection, and :developerConnection
   - version (string): The version string
+  - snapshot (boolean): Whether this is a snapshot version
   
   Returns:
-  - map: The SCM information including connection details and version tag, or nil if no SCM info available"
-  [{:keys [url scm version]}]
-  (let [scm* (if (seq scm)
-               scm
-               (when (some? url)
-                 (default-scm url)))]
-    ; Return scm data with version if it was provided explicitly or in `url`
-    (when (some? scm*)
-      ; Add version to scm data only if it was not provided explicitly in `scm` param
-      (merge {:tag version} scm*))))
+  - map: The SCM information including connection details and version tag. 
+        For snapshots, uses git SHA as tag. For releases, uses version as tag.
+        If no SCM info provided, generates default from URL."
+  [{:keys [url scm-url scm version snapshot]}]
+  (let [url* (or scm-url url)
+        tag (if snapshot
+              (git-sha-latest)
+              version)]
+    (merge {:tag tag} (default-scm url*) scm)))
 
 (defn- parse-params
   [{:keys [lib
@@ -153,6 +159,7 @@
            pom-data
            ; custom params
            url
+           scm-url
            basis-params
            snapshot]
     :or {snapshot false
@@ -172,8 +179,10 @@
           :src-dirs (or src-dirs ["src"])
           :resource-dirs (or resource-dirs ["resources"])
           :scm (get-scm {:url url
+                         :scm-url scm-url
                          :scm scm
-                         :version version})
+                         :version version
+                         :snapshot snapshot})
           :pom-data (or pom-data (pom-template params))))))
 
 ; Public API

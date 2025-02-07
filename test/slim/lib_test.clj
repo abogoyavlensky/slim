@@ -42,8 +42,32 @@
               :developerConnection "scm:git:ssh://git@github.com/user/repo.git"}
              result))))
 
+  (testing "get-scm with snapshot version"
+    (with-redefs [lib/git-sha-latest (constantly "abc123")]
+      (let [url "https://github.com/user/repo"
+            result (#'lib/get-scm {:scm-url url
+                                   :url "https://test.com"
+                                   :version "1.0.0"
+                                   :snapshot true})]
+        (is (= {:url "https://github.com/user/repo"
+                :tag "abc123"
+                :connection "scm:git:git://github.com/user/repo.git"
+                :developerConnection "scm:git:ssh://git@github.com/user/repo.git"}
+               result)))))
+
+  (testing "get-scm with custom SCM and snapshot version"
+    (with-redefs [lib/git-sha-latest (constantly "def456")]
+      (let [scm {:url "https://custom.git/repo"
+                 :connection "custom-connection"
+                 :developerConnection "custom-dev-connection"}
+            result (#'lib/get-scm {:scm scm
+                                   :version "2.0.0"
+                                   :snapshot true})]
+        (is (= (assoc scm :tag "def456")
+               result)))))
+
   (testing "get-scm with no SCM or URL"
-    (is (nil? (#'lib/get-scm {:version "1.0.0"})))))
+    (is (= {:tag "1.0.0"} (#'lib/get-scm {:version "1.0.0"})))))
 
 (deftest get-version-test
   (testing "get-version without snapshot"
@@ -223,7 +247,7 @@
                            [:url
                             "https://opensource.org/license/mit"]]]]
               :resource-dirs ["resources"]
-              :scm nil
+              :scm {:tag "1.0.0"}
               :src-dirs ["src"]
               :target-dir "test/target"
               :version "1.0.0"}

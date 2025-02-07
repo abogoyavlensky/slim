@@ -54,11 +54,11 @@
   "Parses and validates build parameters, filling in default values.
   
   Parameters:
-  :main-ns - The main namespace to compile (required)
-  :target-dir - The target directory (optional)
-  :uber-file - The output jar file path (optional) 
-  :src-dirs - The source directories to include (optional)
-  :class-dir - The directory for compiled classes (optional)
+  - :main-ns - The main namespace to compile (required)
+  - :target-dir - The target directory (optional)
+  - :uber-file - The output jar file path (optional)
+  - :src-dirs - The source directories to include (optional)
+  - :class-dir - The directory for compiled classes (optional)
   
   Returns:
   A map with all parameters populated with defaults where not specified."
@@ -78,11 +78,11 @@
   "Builds an uberjar.
 
   Parameters:
-  :main-ns - The main namespace to compile (required)
-  :target-dir - The target directory (optional, default: target)
-  :uber-file - The uberjar file path (optional, default: target/standalone.jar)
-  :src-dirs - The source directories (optional, default: [\"src\" \"resources\"])
-  :class-dir - The class directory (optional, default: target/classes)"
+  - :main-ns - The main namespace to compile (required)
+  - :target-dir - The target directory (optional, default: target)
+  - :uber-file - The uberjar file path (optional, default: target/standalone.jar)
+  - :src-dirs - The source directories (optional, default: [\"src\" \"resources\"])
+  - :class-dir - The class directory (optional, default: target/classes)"
   [params]
   (let [{:keys [target-dir]
          :as params*} (parse-params params)]
