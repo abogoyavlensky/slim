@@ -175,6 +175,7 @@ If you need to customize your SCM repository data, you can pass the `:scm` optio
 ## Examples
 
 - [Slim](https://github.com/abogoyavlensky/slim/blob/cf80181d0054738e1fd74defb5a67516fda2d77c/deps.edn#L18-L25)
+- [Automigrate](https://github.com/abogoyavlensky/automigrate/blob/b9d0034effa0803ac2b3b47bf8c4ed119d2358ac/deps.edn#L36-L43)
 
 ## Inspired by
 
