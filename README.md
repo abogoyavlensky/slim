@@ -124,7 +124,7 @@ You can customize the build with optional parameters for extended metadata infor
 - `:scm-url` (optional) - Repository URL. If not set, defaults to `:url`.
 - `:description` (optional) - Project description.
 - `:developer` (optional) - Developer name.
-- `:license` (optional) - If not set, defaults to "MIT License".
+- `:license` (optional) - If not set, defaults to: `{:name "MIT License" :url "https://opensource.org/license/mit"}`.
 
 #### Custom configuration
 
