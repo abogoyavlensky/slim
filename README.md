@@ -50,6 +50,11 @@ The minimal configuration requires only the main namespace:
          :exec-args {:main-ns my-app.core}}}}
  ```
 
+#### Available commands
+| Command  | Description                                                                                                                                              |
+|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `build`  | Builds an uberjar file with all dependencies included. The uberjar file will be created at the specified location (defaults to `target/standalone.jar`). |
+
 #### Custom configuration
 You can customize the build with optional parameters. All available options are shown below:
 
@@ -67,11 +72,6 @@ You can customize the build with optional parameters. All available options are 
 - `:uber-file` (optional) - Name of the output uberjar (default: "target/standalone.jar").
 - `:src-dirs` (optional) - Source directories to include (default: ["src" "resources"]).
 - `:class-dir` (optional) - class directory (default: "target/classes").
-
-#### Available commands
-| Command  | Description                                                                                                                                              |
-|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `build`  | Builds an uberjar file with all dependencies included. The uberjar file will be created at the specified location (defaults to `target/standalone.jar`). |
 
 ### Build: Library
 Builds and deploys a jar file for a library.
@@ -107,6 +107,15 @@ clojure -T:slim deploy
 That's it! Your library has been built and deployed to Clojars. 
 
 *Note: You need to have `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables set to your Clojars credentials.*
+
+#### Available commands
+
+| Command   | Description                                                                                                       | Options                                                                                                      |
+|-----------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be built as a snapshot version. Default is `false`.         |
+| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be installed as a snapshot version. Default is `false`.     |
+| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version. Default is `false`.      |
+| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`. |
 
 #### Extended configuration
 You can customize the build with optional parameters for extended metadata information in the library's pom-file. 
@@ -162,15 +171,6 @@ If you need to customize your SCM repository data, you can pass the `:scm` optio
 ```
 
 *Note: For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
-
-#### Available commands
-
-| Command   | Description                                                                                                       | Options                                                                                                      |
-|-----------|-------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `build`   | Builds a jar file for the library.                                                                                | `:snapshot` (optional) - If `true`, the jar will be built as a snapshot version. Default is `false`.         |
-| `install` | Builds and installs the jar to local Maven repository.                                                            | `:snapshot` (optional) - If `true`, the jar will be installed as a snapshot version. Default is `false`.     |
-| `deploy`  | Builds and deploys the jar to Clojars (requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables). | `:snapshot` (optional) - If `true`, the jar will be deployed as a snapshot version. Default is `false`.      |
-| `tag`     | Creates a git tag for the library version.                                                                        | `:push` - If `true` automatically pushes the newly created git tag to remote repository. Default is `false`. |
 
 ## Examples
 
