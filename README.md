@@ -44,9 +44,10 @@ Builds an uberjar file for an application.
 The minimal configuration requires only the main namespace:
 
 ```clojure
-{:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}}
- :ns-default slim.app
- :exec-args {:main-ns my-app.core}}
+{:aliases
+ {:slim {:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}}
+         :ns-default slim.app
+         :exec-args {:main-ns my-app.core}}}}
  ```
 
 #### Custom configuration
@@ -77,11 +78,12 @@ Builds and deploys a jar file for a library.
 The minimal configuration requires the library name and version. It also requires the `slipset/deps-deploy` dependency to deploy the library to Clojars:
 
 ```clojure
-{:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}
-        slipset/deps-deploy {:mvn/version "0.2.2"}}
- :ns-default slim.lib
- :exec-args {:lib my-org/my-lib
-             :version "0.1.0"}}
+{:aliases
+ {:slim {:deps {io.github.abogoyavlensky/slim {:mvn/version "LATEST"}
+                slipset/deps-deploy {:mvn/version "0.2.2"}}
+         :ns-default slim.lib
+         :exec-args {:lib my-org/my-lib
+                     :version "0.1.0"}}}}
 ```
 
 Install locally:
