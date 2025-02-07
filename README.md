@@ -143,7 +143,10 @@ An example of `:pom-data`:
    [:name "Person Name"]]]]
 ```
 
-By default, `:scm` is generated using `:url`, `:scm-url` and `:version` (as tag). If you need to customize your SCM repository data, you can pass the `:scm` option with a value:
+By default, `:scm` is generated using `:url` (or `:scm-url`) and `:version` (as tag).
+If `:snapshot` is `true`, the tag will be presented as latest git commit hash. This is useful for [Cljdoc](https://cljdoc.org/), which requires a unique version for each build, 
+and it allows you to preview doc for each snapshot.
+If you need to customize your SCM repository data, you can pass the `:scm` option with a value:
 
 ```clojure
 {:url "https://github.com/username/lib"
