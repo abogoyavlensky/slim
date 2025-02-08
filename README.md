@@ -37,6 +37,14 @@ clojure -T:slim build
 
 That's it! Your uberjar will be created at `target/standalone.jar`.
 
+## Motivation
+
+It's not that hard to go just with bare `tools.build` and `slipset/deps-deploy` - basically you need few lines in `build.clj` and an alias in `deps.edn`. But **you have to write this build script** for each project every time. And to be honest this script does not differ from project to project too much if you just build jars. And I did it many times.
+
+Also, there are some other existing build tools for Clojure like build.edn or Clein (links below). And that tools are great! They are quite flexible and feature rich, and it causes quite extensive configuration: separate file (build.edn) or separate alias (Clein), or just quite verbose config (both), where it can be simplified for most projects, because most of the time I don't need that flexibility for every project. Both tools, as I see, are target more on building/deploying a library, so I wanted something versatile enough that allows me having one tool to build both applications and libraries.
+
+So, the main motivation behind Slim, and the answer to question "Why one more build tool?" is making build process for Clojure projects as effortless and as minimal as possible. Minimal required configuration that suites most of the projects: 1 parameter for application and 2 parameters for library. I just wanted to streamline the building/deploying process as smoother as possible. Basically, you need just one alias and a couple of required options and few commands to manage most important tasks. I see Slim **as a very thin wrapper** around `tools.build` that just adds some helpers, in a little bit more friendly way, with few assumptions and sane defaults. The same time as it keeps flexibility to configure almost any aspect of the build process.
+
 ## Usage
 
 ### Build: App
