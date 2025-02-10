@@ -15,7 +15,7 @@ jobs:
         with:
           install_args: "babashka cljfmt clj-kondo java clojure"
       - name: Lint and format
-        run: bb fmt-check bb deps && bb lint-init && bb lint
+        run: bb fmt-check && bb deps && bb lint-init && bb lint
 
   outdated:
     runs-on: ubuntu-latest
