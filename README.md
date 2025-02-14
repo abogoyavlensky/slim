@@ -115,7 +115,7 @@ clojure -T:slim deploy
 That's it! Your library has been built and deployed to Clojars. 
 
 > [!IMPORTANT]
-> You need to have `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables set to your Clojars credentials.*
+> You need to have `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables set to your Clojars credentials.
 
 #### Available commands
 
@@ -180,7 +180,7 @@ If you need to customize your SCM repository data, you can pass the `:scm` optio
 ```
 
 > [!TIP]
-> For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.*
+> For other options, please consult the [spec](https://github.com/abogoyavlensky/slim/blob/2a11f2b44ee1e0d66f4175078878296608f0f800/src/slim/lib.clj#L11-L45) of the library and the definition of [clojure.tools.build.api/write-pom](https://github.com/clojure/tools.build/blob/0e68670279b4fac73ff0fc4943059b1ef03c110d/src/main/clojure/clojure/tools/build/api.clj#L369-L421) function.
 
 ## Examples
 
