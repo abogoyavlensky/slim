@@ -11,11 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'tests'
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka java clojure"
       - name: Run tests
-        run: bb deps && bb test
+        run: bb test
 
   deploy:
     runs-on: ubuntu-latest
@@ -23,6 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'deploy'
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka java clojure"

@@ -12,7 +12,7 @@
                               :runner :eftest
                               :runner-opts {:multithread? false}}}
 
-           :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "2.11.1264"}}
+           :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "2.11.1269"}}
                       :main-opts ["-m" "antq.core" "--no-diff"]}
 
            :slim {:deps {io.github.abogoyavlensky/slim {:local/root "."}
