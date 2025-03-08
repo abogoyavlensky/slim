@@ -16,7 +16,7 @@ The slim way to build Clojure.
 - 🎯 **Minimal Configuration**: Uses `deps.edn` - no additional configuration files needed
 - 🔧 **Sensible Defaults**: Works out of the box with minimal configs for most Clojure projects
 - 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
-- 📚 **Documentation**: Build up-to-date [cljdoc](https://cljdoc.org/) page for a specific SNAPSHOT version
+- 📚 **Documentation**: Build up-to-date [cljdoc](https://cljdoc.org/) page for a specific library SNAPSHOT version
 
 
 ## Quick Start: Build App
