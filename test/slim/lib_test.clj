@@ -352,4 +352,8 @@
                                           :version-file (.getPath temp-file)})]
           (is (= "4.0.0" (:version result))))
         (finally
-          (.delete temp-file))))))
+          (.delete temp-file)))))
+
+  (testing "parse-params with neither version nor version-file"
+    (is (thrown-with-msg? ExceptionInfo #"Spec assertion failed"
+                          (#'lib/parse-params {:lib 'my/lib})))))
