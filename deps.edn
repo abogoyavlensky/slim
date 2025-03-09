@@ -18,7 +18,7 @@
            :slim {:deps {io.github.abogoyavlensky/slim {:local/root "."}
                          slipset/deps-deploy {:mvn/version "0.2.2"}}
                   :ns-default slim.lib
-                  :exec-args {:version "0.2.2"
+                  :exec-args {:version "0.3.0"
                               :lib io.github.abogoyavlensky/slim
                               :url "https://github.com/abogoyavlensky/slim"
                               :description "The slim way to build Clojure"
