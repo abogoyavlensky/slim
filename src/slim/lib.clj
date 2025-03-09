@@ -17,6 +17,7 @@
 
 (s/def ::lib symbol?)
 (s/def ::version string?)
+(s/def ::version-file string?)
 (s/def ::target-dir string?)
 (s/def ::jar-file string?)
 (s/def ::class-dir string?)
@@ -37,8 +38,8 @@
 
 (s/def ::params
   (s/keys
-    :req-un [::lib
-             ::version]
+    :req-un [(or ::version ::version-file)
+             ::lib]
     :opt-un [::target-dir
              ::jar-file
              ::class-dir
@@ -49,26 +50,45 @@
              ::license
              ::url
              ::basis-params
-             ::snapshot]))
+             ::snapshot
+             ::version
+             ::version-file]))
 
 ; Build
 
 (def ^:private TARGET-DIR "target")
 (def ^:private SNAPSHOT-SUFFIX "-SNAPSHOT")
 
+(defn- process-version-template
+  "Processes version string template by replacing variables with actual values.
+  
+  Parameters:
+  - version (string): The version string that may contain template variables
+  
+  Returns:
+  - string: The processed version string with template variables replaced"
+  [version]
+  (let [commit-count-pattern #"\{\{git-count-revs\}\}"
+        has-commit-count-var (re-find commit-count-pattern version)]
+    (if has-commit-count-var
+      (let [commit-count (b/git-count-revs nil)]
+        (str/replace version commit-count-pattern (str commit-count)))
+      version)))
+
 (defn- get-version
   "Gets the version string for the library.
   
   Parameters:
-  - latest-version (string): The base version number
+  - latest-version (string): The base version number, may contain template variables
   - snapshot (boolean): Whether this is a snapshot version
   
   Returns:
-  - string: The complete version string with an optional SNAPSHOT suffix"
+  - string: The complete version string with template variables replaced and optional SNAPSHOT suffix"
   [latest-version snapshot]
-  (let [new-version (if (true? snapshot)
-                      (str latest-version SNAPSHOT-SUFFIX)
-                      latest-version)]
+  (let [processed-version (process-version-template latest-version)
+        new-version (if (true? snapshot)
+                      (str processed-version SNAPSHOT-SUFFIX)
+                      processed-version)]
     (println (format "New version: %s" new-version))
     new-version))
 
@@ -147,9 +167,29 @@
               version)]
     (merge {:tag tag} (default-scm url*) scm)))
 
+(defn- read-version-from-file
+  "Reads version string from a file.
+  
+  Parameters:
+  - version-file (string): Path to the file containing version string
+  
+  Returns:
+  - string: The version string read from the file"
+  [version-file]
+  (when version-file
+    (try
+      (-> version-file
+          slurp
+          str/trim)
+      (catch Exception e
+        (throw (ex-info (format "Failed to read version from file: %s" version-file)
+                        {:version-file version-file}
+                        e))))))
+
 (defn- parse-params
   [{:keys [lib
            version
+           version-file
            target-dir
            jar-file
            src-dirs
@@ -166,10 +206,12 @@
          basis-params {:project "deps.edn"}}
     :as params}]
   (s/assert ::params params)
-  (let [version* (get-version version snapshot)
+  (let [version-from-file (read-version-from-file version-file)
+        effective-version (or version-from-file version)
+        version* (get-version effective-version snapshot)
         target-dir* (or target-dir TARGET-DIR)]
     (-> params
-        (dissoc :version :snapshot :basis-params :url :license)
+        (dissoc :version :snapshot :basis-params :url :license :version-file)
         (assoc
           :version version*
           :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir* lib version*))
@@ -181,7 +223,7 @@
           :scm (get-scm {:url url
                          :scm-url scm-url
                          :scm scm
-                         :version version
+                         :version effective-version
                          :snapshot snapshot})
           :pom-data (or pom-data (pom-template params))))))
 

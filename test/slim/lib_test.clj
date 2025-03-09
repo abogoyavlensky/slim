@@ -3,7 +3,8 @@
             [clojure.test :refer :all]
             [clojure.tools.build.api :as b]
             [slim.lib :as lib])
-  (:import [clojure.lang ExceptionInfo]))
+  (:import [clojure.lang ExceptionInfo]
+           [java.io File]))
 
 (deftest default-scm-test
   (testing "default-scm with https URL"
@@ -69,6 +70,21 @@
   (testing "get-scm with no SCM or URL"
     (is (= {:tag "1.0.0"} (#'lib/get-scm {:version "1.0.0"})))))
 
+(deftest process-version-template-test
+  (testing "process-version-template with no template variables"
+    (is (= "1.0.0"
+           (#'lib/process-version-template "1.0.0"))))
+
+  (testing "process-version-template with git-count-revs template variable"
+    (with-redefs [b/git-count-revs (constantly 42)]
+      (is (= "1.0.42"
+             (#'lib/process-version-template "1.0.{{git-count-revs}}")))))
+
+  (testing "process-version-template with git-count-revs in the middle"
+    (with-redefs [b/git-count-revs (constantly 123)]
+      (is (= "1.123.0"
+             (#'lib/process-version-template "1.{{git-count-revs}}.0"))))))
+
 (deftest get-version-test
   (testing "get-version without snapshot"
     (is (= "1.0.0"
@@ -80,7 +96,17 @@
 
   (testing "get-version with nil snapshot (defaults to false)"
     (is (= "2.1.0"
-           (#'lib/get-version "2.1.0" nil)))))
+           (#'lib/get-version "2.1.0" nil))))
+
+  (testing "get-version with template variable and snapshot"
+    (with-redefs [b/git-count-revs (constantly 99)]
+      (is (= "1.99.0-SNAPSHOT"
+             (#'lib/get-version "1.{{git-count-revs}}.0" true)))))
+
+  (testing "get-version with template variable without snapshot"
+    (with-redefs [b/git-count-revs (constantly 88)]
+      (is (= "0.88.1"
+             (#'lib/get-version "0.{{git-count-revs}}.1" false))))))
 
 (deftest get-license-test
   (testing "get-license with custom license"
@@ -309,3 +335,50 @@
       (is (= [{:src-dirs ["src" "resources"]
                :target-dir "test/target/classes"}]
              (-> b/copy-dir bond/calls first :args))))))
+
+(deftest read-version-from-file-test
+  (testing "read-version-from-file with valid file"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "1.2.3")
+        (is (= "1.2.3" (#'lib/read-version-from-file (.getPath temp-file))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "read-version-from-file with file containing whitespace"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "  2.0.0  \n")
+        (is (= "2.0.0" (#'lib/read-version-from-file (.getPath temp-file))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "read-version-from-file with non-existent file"
+    (is (thrown-with-msg? ExceptionInfo #"Failed to read version from file"
+                          (#'lib/read-version-from-file "non-existent-file.txt")))))
+
+(deftest parse-params-with-version-file-test
+  (testing "parse-params with version-file"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "3.0.0")
+        (let [result (#'lib/parse-params {:lib 'my/lib
+                                          :version-file (.getPath temp-file)})]
+          (is (= "3.0.0" (:version result))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "parse-params with both version and version-file (version-file takes precedence)"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "4.0.0")
+        (let [result (#'lib/parse-params {:lib 'my/lib
+                                          :version "2.0.0"
+                                          :version-file (.getPath temp-file)})]
+          (is (= "4.0.0" (:version result))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "parse-params with neither version nor version-file"
+    (is (thrown-with-msg? ExceptionInfo #"Spec assertion failed"
+                          (#'lib/parse-params {:lib 'my/lib})))))
