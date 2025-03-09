@@ -6,8 +6,7 @@
   - install: Build and install to local repo
   - deploy: Build and deploy to Clojars
   - tag: Create a Git tag for the version"
-  (:require [clojure.java.io :as io]
-            [clojure.spec.alpha :as s]
+  (:require [clojure.spec.alpha :as s]
             [clojure.string :as str]
             [clojure.tools.build.api :as b]))
 
@@ -60,19 +59,36 @@
 (def ^:private TARGET-DIR "target")
 (def ^:private SNAPSHOT-SUFFIX "-SNAPSHOT")
 
+(defn- process-version-template
+  "Processes version string template by replacing variables with actual values.
+  
+  Parameters:
+  - version (string): The version string that may contain template variables
+  
+  Returns:
+  - string: The processed version string with template variables replaced"
+  [version]
+  (let [commit-count-pattern #"\{\{git-count-revs\}\}"
+        has-commit-count-var (re-find commit-count-pattern version)]
+    (if has-commit-count-var
+      (let [commit-count (b/git-count-revs nil)]
+        (str/replace version commit-count-pattern (str commit-count)))
+      version)))
+
 (defn- get-version
   "Gets the version string for the library.
   
   Parameters:
-  - latest-version (string): The base version number
+  - latest-version (string): The base version number, may contain template variables
   - snapshot (boolean): Whether this is a snapshot version
   
   Returns:
-  - string: The complete version string with an optional SNAPSHOT suffix"
+  - string: The complete version string with template variables replaced and optional SNAPSHOT suffix"
   [latest-version snapshot]
-  (let [new-version (if (true? snapshot)
-                      (str latest-version SNAPSHOT-SUFFIX)
-                      latest-version)]
+  (let [processed-version (process-version-template latest-version)
+        new-version (if (true? snapshot)
+                      (str processed-version SNAPSHOT-SUFFIX)
+                      processed-version)]
     (println (format "New version: %s" new-version))
     new-version))
 

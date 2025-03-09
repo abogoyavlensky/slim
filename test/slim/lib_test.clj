@@ -70,6 +70,21 @@
   (testing "get-scm with no SCM or URL"
     (is (= {:tag "1.0.0"} (#'lib/get-scm {:version "1.0.0"})))))
 
+(deftest process-version-template-test
+  (testing "process-version-template with no template variables"
+    (is (= "1.0.0"
+           (#'lib/process-version-template "1.0.0"))))
+
+  (testing "process-version-template with git-count-revs template variable"
+    (with-redefs [b/git-count-revs (constantly 42)]
+      (is (= "1.0.42"
+             (#'lib/process-version-template "1.0.{{git-count-revs}}")))))
+
+  (testing "process-version-template with git-count-revs in the middle"
+    (with-redefs [b/git-count-revs (constantly 123)]
+      (is (= "1.123.0"
+             (#'lib/process-version-template "1.{{git-count-revs}}.0"))))))
+
 (deftest get-version-test
   (testing "get-version without snapshot"
     (is (= "1.0.0"
@@ -81,7 +96,17 @@
 
   (testing "get-version with nil snapshot (defaults to false)"
     (is (= "2.1.0"
-           (#'lib/get-version "2.1.0" nil)))))
+           (#'lib/get-version "2.1.0" nil))))
+
+  (testing "get-version with template variable and snapshot"
+    (with-redefs [b/git-count-revs (constantly 99)]
+      (is (= "1.99.0-SNAPSHOT"
+             (#'lib/get-version "1.{{git-count-revs}}.0" true)))))
+
+  (testing "get-version with template variable without snapshot"
+    (with-redefs [b/git-count-revs (constantly 88)]
+      (is (= "0.88.1"
+             (#'lib/get-version "0.{{git-count-revs}}.1" false))))))
 
 (deftest get-license-test
   (testing "get-license with custom license"
