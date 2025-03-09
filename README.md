@@ -140,8 +140,8 @@ You can customize the build with optional parameters for extended metadata infor
 ```
 
 - `:lib` (**required**) - Library name in org/lib format.
-- `:version` (**required** unless `:version-file` is provided) - Library version. The version will be used as a git tag as-is. If you want to customize it, please use the `:scm` option.
-- `:version-file` (**required** unless `:version` is provided) - Path to a file containing the version string. The file should contain only the version number as plain text.
+- `:version` (**required** unless `:version-file` is provided) - Library version. The version will be used as a git tag as-is. If you want to customize it, please use the `:scm` option. You can optionally use the `{{git-count-revs}}` template variable in the version string to include the number of git commits, e.g., "1.0.{{git-count-revs}}" will become "1.0.42" if there are 42 commits.
+- `:version-file` (**required** unless `:version` is provided) - Path to a file containing the version string. The file should contain only the version number as plain text. The version string in the file can also use the `{{git-count-revs}}` template variable.
 - `:url` (optional) - Project URL. It will also be used as the SCM URL if option `:scm-url` is not set.
 - `:scm-url` (optional) - Repository URL. If not set, defaults to `:url`.
 - `:description` (optional) - Project description.
