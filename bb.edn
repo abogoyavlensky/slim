@@ -29,6 +29,9 @@
   check {:doc "Run all code checks and tests"
          :depends [fmt lint outdated test]}
 
+  install-snapshot {:doc "Deploy snapshot version to Clojars"
+                    :task (clojure "-T:slim install :snapshot true")}
+
   deploy-snapshot {:doc "Deploy snapshot version to Clojars"
                    :task (clojure "-T:slim deploy :snapshot true")}
 

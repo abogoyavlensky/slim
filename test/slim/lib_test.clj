@@ -88,25 +88,30 @@
 (deftest get-version-test
   (testing "get-version without snapshot"
     (is (= "1.0.0"
-           (#'lib/get-version "1.0.0" false))))
+           (#'lib/get-version {:version "1.0.0"
+                               :snapshot false}))))
 
   (testing "get-version with snapshot"
     (is (= "1.0.0-SNAPSHOT"
-           (#'lib/get-version "1.0.0" true))))
+           (#'lib/get-version {:version "1.0.0"
+                               :snapshot true}))))
 
   (testing "get-version with nil snapshot (defaults to false)"
     (is (= "2.1.0"
-           (#'lib/get-version "2.1.0" nil))))
+           (#'lib/get-version {:version "2.1.0"
+                               :snapshot nil}))))
 
   (testing "get-version with template variable and snapshot"
     (with-redefs [b/git-count-revs (constantly 99)]
       (is (= "1.99.0-SNAPSHOT"
-             (#'lib/get-version "1.{{git-count-revs}}.0" true)))))
+             (#'lib/get-version {:version "1.{{git-count-revs}}.0"
+                                 :snapshot true})))))
 
   (testing "get-version with template variable without snapshot"
     (with-redefs [b/git-count-revs (constantly 88)]
       (is (= "0.88.1"
-             (#'lib/get-version "0.{{git-count-revs}}.1" false))))))
+             (#'lib/get-version {:version "0.{{git-count-revs}}.1"
+                                 :snapshot false}))))))
 
 (deftest get-license-test
   (testing "get-license with custom license"

@@ -75,17 +75,39 @@
         (str/replace version commit-count-pattern (str commit-count)))
       version)))
 
+(defn- read-version-from-file
+  "Reads version string from a file.
+
+  Parameters:
+  - version-file (string): Path to the file containing version string
+
+  Returns:
+  - string: The version string read from the file"
+  [version-file]
+  (when version-file
+    (try
+      (-> version-file
+          slurp
+          str/trim)
+      (catch Exception e
+        (throw (ex-info (format "Failed to read version from file: %s" version-file)
+                        {:version-file version-file}
+                        e))))))
+
 (defn- get-version
   "Gets the version string for the library.
   
   Parameters:
-  - latest-version (string): The base version number, may contain template variables
+  - version (string): The base version number from parameters
+  - version-file (string): Optional path to file containing version
   - snapshot (boolean): Whether this is a snapshot version
   
   Returns:
   - string: The complete version string with template variables replaced and optional SNAPSHOT suffix"
-  [latest-version snapshot]
-  (let [processed-version (process-version-template latest-version)
+  [{:keys [version version-file snapshot]}]
+  (let [version-from-file (read-version-from-file version-file)
+        effective-version (or version-from-file version)
+        processed-version (process-version-template effective-version)
         new-version (if (true? snapshot)
                       (str processed-version SNAPSHOT-SUFFIX)
                       processed-version)]
@@ -167,29 +189,8 @@
               version)]
     (merge {:tag tag} (default-scm url*) scm)))
 
-(defn- read-version-from-file
-  "Reads version string from a file.
-  
-  Parameters:
-  - version-file (string): Path to the file containing version string
-  
-  Returns:
-  - string: The version string read from the file"
-  [version-file]
-  (when version-file
-    (try
-      (-> version-file
-          slurp
-          str/trim)
-      (catch Exception e
-        (throw (ex-info (format "Failed to read version from file: %s" version-file)
-                        {:version-file version-file}
-                        e))))))
-
 (defn- parse-params
   [{:keys [lib
-           version
-           version-file
            target-dir
            jar-file
            src-dirs
@@ -206,15 +207,13 @@
          basis-params {:project "deps.edn"}}
     :as params}]
   (s/assert ::params params)
-  (let [version-from-file (read-version-from-file version-file)
-        effective-version (or version-from-file version)
-        version* (get-version effective-version snapshot)
+  (let [effective-version (get-version params)
         target-dir* (or target-dir TARGET-DIR)]
     (-> params
         (dissoc :version :snapshot :basis-params :url :license :version-file)
         (assoc
-          :version version*
-          :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir* lib version*))
+          :version effective-version
+          :jar-file (or jar-file (format "%s/%s-%s.jar" target-dir* lib effective-version))
           :basis (b/create-basis basis-params)
           :target-dir target-dir*
           :class-dir (or class-dir (format "%s/classes" target-dir*))
@@ -283,9 +282,13 @@
   - version (string): The version to tag
   - push (boolean): Whether to push the tag to the remote repository (default: false)
   - msg (string): The optional message for the tag (default: 'Release version X.Y.Z')"
-  [{:keys [version push msg]}]
-  (b/git-process
-    (let [msg (or msg (format "'Release version %s'" version))]
-      {:git-args ["tag" "-a" version "-m" msg]}))
-  (when (true? push)
-    (b/git-process {:git-args ["push" "origin" version]})))
+  [{:keys [push msg]
+    :as params}]
+  (let [effective-version (-> params
+                              (dissoc :snapshot)
+                              (get-version))]
+    (b/git-process
+      (let [msg (or msg (format "'Release version %s'" effective-version))]
+        {:git-args ["tag" "-a" effective-version "-m" msg]}))
+    (when (true? push)
+      (b/git-process {:git-args ["push" "origin" effective-version]}))))
