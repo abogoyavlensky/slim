@@ -140,14 +140,16 @@ You can customize the build with optional parameters for extended metadata infor
 ```
 
 - `:lib` (**required**) - Library name in org/lib format.
-- `:version` (**required**) - Library version. The version will be used as a git tag as-is. If you want to customize it, please use the `:scm` option.
+- `:version` (**required** unless `:version-file` is provided) - Library version. The version will be used as a git tag as-is. If you want to customize it, please use the `:scm` option.
+- `:version-file` (**required** unless `:version` is provided) - Path to a file containing the version string. The file should contain only the version number as plain text.
 - `:url` (optional) - Project URL. It will also be used as the SCM URL if option `:scm-url` is not set.
 - `:scm-url` (optional) - Repository URL. If not set, defaults to `:url`.
 - `:description` (optional) - Project description.
 - `:developer` (optional) - Developer name.
 - `:license` (optional) - If not set, defaults to: `{:name "MIT License" :url "https://opensource.org/license/mit"}`.
 
-#### Custom configuration
+> [!NOTE]
+> When both `:version` and `:version-file` are provided, the version from the file takes precedence.
 
 The options `:url`, `:description`, `:developer`, and `:license` are used to generate the pom-file for the library.
 If you need to customize the pom-file, you can pass the `:pom-data` option, which will take precedence over other options.

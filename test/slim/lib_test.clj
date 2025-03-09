@@ -3,7 +3,8 @@
             [clojure.test :refer :all]
             [clojure.tools.build.api :as b]
             [slim.lib :as lib])
-  (:import [clojure.lang ExceptionInfo]))
+  (:import [clojure.lang ExceptionInfo]
+           [java.io File]))
 
 (deftest default-scm-test
   (testing "default-scm with https URL"
@@ -309,3 +310,46 @@
       (is (= [{:src-dirs ["src" "resources"]
                :target-dir "test/target/classes"}]
              (-> b/copy-dir bond/calls first :args))))))
+
+(deftest read-version-from-file-test
+  (testing "read-version-from-file with valid file"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "1.2.3")
+        (is (= "1.2.3" (#'lib/read-version-from-file (.getPath temp-file))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "read-version-from-file with file containing whitespace"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "  2.0.0  \n")
+        (is (= "2.0.0" (#'lib/read-version-from-file (.getPath temp-file))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "read-version-from-file with non-existent file"
+    (is (thrown-with-msg? ExceptionInfo #"Failed to read version from file"
+                          (#'lib/read-version-from-file "non-existent-file.txt")))))
+
+(deftest parse-params-with-version-file-test
+  (testing "parse-params with version-file"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "3.0.0")
+        (let [result (#'lib/parse-params {:lib 'my/lib
+                                          :version-file (.getPath temp-file)})]
+          (is (= "3.0.0" (:version result))))
+        (finally
+          (.delete temp-file)))))
+
+  (testing "parse-params with both version and version-file (version-file takes precedence)"
+    (let [temp-file (File/createTempFile "version" ".txt")]
+      (try
+        (spit temp-file "4.0.0")
+        (let [result (#'lib/parse-params {:lib 'my/lib
+                                          :version "2.0.0"
+                                          :version-file (.getPath temp-file)})]
+          (is (= "4.0.0" (:version result))))
+        (finally
+          (.delete temp-file))))))

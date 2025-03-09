@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 *The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)*
 
+## Unreleased
+
+### Added
+
+- Add ability to read version from a file using `:version-file` parameter.
+
 ## 0.2.2 - 2025-02-09
 
 ### Changed
