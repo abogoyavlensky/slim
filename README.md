@@ -198,8 +198,8 @@ If you need to customize your SCM repository data, you can pass the `:scm` optio
 
 ## Alternatives
 
-- https://github.com/liquidz/build.edn
-- https://github.com/NoahTheDuke/clein
+- [build.edn](https://github.com/liquidz/build.edn)
+- [clein](https://github.com/NoahTheDuke/clein)
 
 ## License
 MIT License
