@@ -16,7 +16,7 @@ The slim way to build Clojure.
 - 🎯 **Minimal Configuration**: Uses `deps.edn` - no additional configuration files needed
 - 🔧 **Sensible Defaults**: Works out of the box with minimal configs for most Clojure projects
 - 📦 **Minimal Dependencies**: Built on top of `tools.build` and `slipset/deps-deploy`
-- 📚 **Documentation**: Build up-to-date [cljdoc](https://cljdoc.org/) page for a specific library SNAPSHOT version
+- 📚 **Documentation**: Build up-to-date [cljdoc](https://cljdoc.org/) page for a library SNAPSHOT version
 
 
 ## Quick Start: Build App
@@ -189,6 +189,7 @@ If you need to customize your SCM repository data, you can pass the `:scm` optio
 
 - [Slim](https://github.com/abogoyavlensky/slim/blob/cf80181d0054738e1fd74defb5a67516fda2d77c/deps.edn#L18-L25)
 - [Automigrate](https://github.com/abogoyavlensky/automigrate/blob/b9d0034effa0803ac2b3b47bf8c4ed119d2358ac/deps.edn#L36-L43)
+- [manifest-edn](https://github.com/abogoyavlensky/manifest-edn)
 
 ## Inspired by
 
